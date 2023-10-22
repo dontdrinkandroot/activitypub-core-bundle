@@ -70,6 +70,14 @@ class Uri implements Stringable
         return $path;
     }
 
+    public function toString(): string
+    {
+        return $this->__toString();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function __toString(): string
     {
         $uri = '';
