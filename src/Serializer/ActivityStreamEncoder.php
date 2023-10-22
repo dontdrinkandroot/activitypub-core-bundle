@@ -53,9 +53,9 @@ class ActivityStreamEncoder implements EncoderInterface, DecoderInterface
 
         $jsonLdContext = $data['@context'];
         if (is_string($jsonLdContext) && self::ACTIVITY_STREAM_NS !== $jsonLdContext) {
-            $data['@context'] = [$jsonLdContext, self::ACTIVITY_STREAM_NS];
+            $data['@context'] = [self::ACTIVITY_STREAM_NS, $jsonLdContext];
         } elseif (is_array($jsonLdContext) && !in_array(self::ACTIVITY_STREAM_NS, $jsonLdContext)) {
-            $data['@context'] = array_merge($jsonLdContext, [self::ACTIVITY_STREAM_NS]);
+            $data['@context'] = [self::ACTIVITY_STREAM_NS] +  $jsonLdContext;
         }
         return $data;
     }
