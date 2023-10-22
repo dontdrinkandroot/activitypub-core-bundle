@@ -1,0 +1,63 @@
+{
+    "name": "dontdrinkandroot/activitypub-core-bundle",
+    "type": "symfony-bundle",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "license": "Apache-2.0",
+    "description": "Symfony Bundle for that allows your application to act as an ActivityPub server.",
+    "keywords": [
+        "activitypub",
+        "symfony",
+        "bundle",
+        "federation",
+        "server"
+    ],
+    "authors": [
+        {
+            "name": "Philip Washington Sorst",
+            "email": "philip@sorst.net",
+            "homepage": "https://sorst.net"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Dontdrinkandroot\\ActivityPubCoreBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dontdrinkandroot\\ActivityPubCoreBundle\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.1",
+        "ext-openssl": "*",
+        "dontdrinkandroot/common": "^0.2.2",
+        "phpseclib/phpseclib": "^3.0",
+        "symfony/config": "^5.4",
+        "symfony/dependency-injection": "^5.4",
+        "symfony/expression-language": "^5.4",
+        "symfony/framework-bundle": "^5.4",
+        "symfony/http-client": "^5.4",
+        "symfony/http-kernel": "^5.4",
+        "symfony/serializer": "^5.4",
+        "symfony/yaml": "^5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "symfony/browser-kit": "^5.4",
+        "symfony/phpunit-bridge": "^5.4"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "symfony": {
+            "require": "5.4.*",
+            "allow-contrib": true
+        },
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}
