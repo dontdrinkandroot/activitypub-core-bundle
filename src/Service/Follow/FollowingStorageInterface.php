@@ -17,4 +17,16 @@ interface FollowingStorageInterface
     public function remove(LocalActorInterface $localActor, Uri $remoteActorId): void;
 
     public function findState(LocalActorInterface $localActor, Uri $remoteActorId): ?FollowState;
+
+    /**
+     * @return Uri[]
+     */
+    public function list(
+        LocalActorInterface $localActor,
+        FollowState $followState = FollowState::ACCEPTED,
+        int $offset = 0,
+        int $limit = 50
+    ): array;
+
+    public function count(LocalActorInterface $localActor, FollowState $followState = FollowState::ACCEPTED): int;
 }

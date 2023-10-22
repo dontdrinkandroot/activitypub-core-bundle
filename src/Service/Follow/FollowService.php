@@ -130,9 +130,35 @@ class FollowService implements FollowServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function getNumFollowers(LocalActorInterface $localActor): int
+    public function getNumFollowers(
+        LocalActorInterface $localActor,
+        FollowState $followState = FollowState::ACCEPTED
+    ): int
     {
-        return $this->followerStorage->count($localActor);
+        return $this->followerStorage->count($localActor, $followState);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function listFollowing(
+        LocalActorInterface $localActor,
+        FollowState $followState = FollowState::ACCEPTED,
+        int $page = 1,
+        int $itemsPerPage = 50
+    ): array {
+        $offset = ($page - 1) * $itemsPerPage;
+        return $this->followingStorage->list($localActor, $followState, $offset, $itemsPerPage);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNumFollowing(
+        LocalActorInterface $localActor,
+        FollowState $followState = FollowState::ACCEPTED
+    ): int {
+        return $this->followingStorage->count($localActor, $followState);
     }
 
     private function getInbox(Uri $actorId): Uri

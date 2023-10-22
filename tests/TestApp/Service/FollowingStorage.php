@@ -54,4 +54,26 @@ class FollowingStorage implements FollowingStorageInterface
         // TODO: Implement findState() method.
         throw new RuntimeException(__FUNCTION__ . ' not implemented');
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function list(
+        LocalActorInterface $localActor,
+        FollowState $followState = FollowState::ACCEPTED,
+        int $offset = 0,
+        int $limit = 50
+    ): array {
+        // TODO: Implement list() method.
+        throw new RuntimeException(__FUNCTION__ . ' not implemented');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count(LocalActorInterface $localActor, FollowState $followState = FollowState::ACCEPTED): int
+    {
+        // TODO: Implement count() method.
+        throw new RuntimeException(__FUNCTION__ . ' not implemented');
+    }
 }

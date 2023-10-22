@@ -26,5 +26,5 @@ interface FollowerStorageInterface
         int $limit = 50
     ): array;
 
-    public function count(LocalActorInterface $localActor): int;
+    public function count(LocalActorInterface $localActor, FollowState $followState = FollowState::ACCEPTED): int;
 }

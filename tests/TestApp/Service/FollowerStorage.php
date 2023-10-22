@@ -62,7 +62,7 @@ class FollowerStorage implements FollowerStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function count(LocalActorInterface $localActor): int
+    public function count(LocalActorInterface $localActor, FollowState $followState = FollowState::ACCEPTED): int
     {
         // TODO: Implement count() method.
         throw new RuntimeException(__FUNCTION__ . ' not implemented');

@@ -28,5 +28,23 @@ interface FollowServiceInterface
         int $itemsPerPage = 50
     ): array;
 
-    public function getNumFollowers(LocalActorInterface $localActor): int;
+    public function getNumFollowers(
+        LocalActorInterface $localActor,
+        FollowState $followState = FollowState::ACCEPTED
+    ): int;
+
+    /**
+     * @return Uri[]
+     */
+    public function listFollowing(
+        LocalActorInterface $localActor,
+        FollowState $followState = FollowState::ACCEPTED,
+        int $page = 1,
+        int $itemsPerPage = 50
+    ): array;
+
+    public function getNumFollowing(
+        LocalActorInterface $localActor,
+        FollowState $followState = FollowState::ACCEPTED
+    ): int;
 }
