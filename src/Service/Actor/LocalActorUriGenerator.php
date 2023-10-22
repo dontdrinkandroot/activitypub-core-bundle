@@ -13,7 +13,8 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly UrlMatcherInterface $urlMatcher
+        private readonly UrlMatcherInterface $urlMatcher,
+        private readonly string $host,
     ) {
     }
 
@@ -22,6 +23,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
      */
     public function generateId(LocalActorInterface|string $usernameOrLocalActor): Uri
     {
+        $this->urlMatcher->getContext()->setHost($this->host);
         $username = $this->getUsername($usernameOrLocalActor);
         return Uri::fromString(
             $this->urlGenerator->generate(
@@ -37,6 +39,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
      */
     public function generateInbox(LocalActorInterface|string $usernameOrLocalActor): Uri
     {
+        $this->urlMatcher->getContext()->setHost($this->host);
         $username = $this->getUsername($usernameOrLocalActor);
         return Uri::fromString(
             $this->urlGenerator->generate(
@@ -52,6 +55,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
      */
     public function generateOutbox(LocalActorInterface|string $usernameOrLocalActor): Uri
     {
+        $this->urlMatcher->getContext()->setHost($this->host);
         $username = $this->getUsername($usernameOrLocalActor);
         return Uri::fromString(
             $this->urlGenerator->generate(
@@ -67,6 +71,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
      */
     public function generateFollowers(LocalActorInterface|string $usernameOrLocalActor, ?int $page = null): Uri
     {
+        $this->urlMatcher->getContext()->setHost($this->host);
         $username = $this->getUsername($usernameOrLocalActor);
         $parameters = ['username' => $username];
         if (null !== $page) {
@@ -86,6 +91,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
      */
     public function generateFollowing(LocalActorInterface|string $usernameOrLocalActor, ?int $page = null): Uri
     {
+        $this->urlMatcher->getContext()->setHost($this->host);
         $username = $this->getUsername($usernameOrLocalActor);
         $parameters = ['username' => $username];
         if (null !== $page) {
@@ -105,9 +111,11 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
      */
     public function matchUsername(Uri $uri): ?string
     {
-        /* Match 'accept' header 'application/activity+json' */
+        if ($uri->host !== $this->host) {
+            return null;
+        }
+
         $this->urlMatcher->getContext()->setMethod('GET');
-        $this->urlMatcher->getContext()->setParameter('_accept', 'application/activity+json');
 
         try {
             $parameters = $this->urlMatcher->match(Asserted::notNull($uri->getPathWithQueryAndFragment()));

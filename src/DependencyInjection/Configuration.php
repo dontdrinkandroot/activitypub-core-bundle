@@ -21,6 +21,11 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
             ->append(
+                (new ScalarNodeDefinition('host'))
+                    ->isRequired()
+                    ->cannotBeEmpty()
+            )
+            ->append(
                 (new ScalarNodeDefinition('actor_path_prefix'))
                     ->defaultValue('/@')
                     ->cannotBeEmpty()

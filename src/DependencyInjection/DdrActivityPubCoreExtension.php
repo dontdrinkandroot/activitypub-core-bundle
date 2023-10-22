@@ -26,6 +26,7 @@ class DdrActivityPubCoreExtension extends Extension implements PrependExtensionI
             ->registerForAutoconfiguration(InboxHandlerInterface::class)
             ->addTag(Tag::INBOX_HANDLER);
 
+        $container->setParameter(Param::HOST, $config['host']);
         $container->setParameter(Param::ACTOR_PATH_PREFIX, $config['actor_path_prefix']);
 
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../config/services'));

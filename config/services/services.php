@@ -106,7 +106,8 @@ return function (ContainerConfigurator $configurator): void {
     $services->set(LocalActorUriGenerator::class)
         ->args([
             service(UrlGeneratorInterface::class),
-            service(UrlMatcherInterface::class)
+            service(UrlMatcherInterface::class),
+            param(Param::HOST)
         ]);
     $services->alias(LocalActorUriGeneratorInterface::class, LocalActorUriGenerator::class);
 
