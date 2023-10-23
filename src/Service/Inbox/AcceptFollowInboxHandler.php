@@ -55,7 +55,7 @@ class AcceptFollowInboxHandler implements InboxHandlerInterface
             return new Response(status: Response::HTTP_NOT_FOUND);
         }
 
-        $this->followingService->requestAccepted($localActor, $followObjectId);
+        $this->followingService->accept($localActor, $followObjectId);
 
         return new Response(status: Response::HTTP_ACCEPTED);
     }

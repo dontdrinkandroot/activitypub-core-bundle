@@ -9,6 +9,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowingStorageInterf
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\AcceptFollowInboxHandler;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\AnnounceInboxHandler;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\FollowInboxHandler;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\RejectFollowInboxHandler;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\UndoFollowInboxHandler;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -26,6 +27,14 @@ return function (ContainerConfigurator $configurator): void {
         ->tag(Tag::INBOX_HANDLER);
 
     $services->set(AcceptFollowInboxHandler::class)
+        ->args([
+            service(FollowingStorageInterface::class),
+            service(ObjectResolverInterface::class),
+            service(LocalActorServiceInterface::class)
+        ])
+        ->tag(Tag::INBOX_HANDLER);
+
+    $services->set(RejectFollowInboxHandler::class)
         ->args([
             service(FollowingStorageInterface::class),
             service(ObjectResolverInterface::class),

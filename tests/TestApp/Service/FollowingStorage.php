@@ -13,7 +13,7 @@ class FollowingStorage implements FollowingStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function addRequest(LocalActorInterface $localActor, Uri $remoteActorId): void
+    public function add(LocalActorInterface $localActor, Uri $remoteActorId): void
     {
         // TODO: Implement addRequest() method.
         throw new RuntimeException(__FUNCTION__ . ' not implemented');
@@ -22,7 +22,7 @@ class FollowingStorage implements FollowingStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function requestAccepted(LocalActorInterface $localActor, Uri $remoteActorId): void
+    public function accept(LocalActorInterface $localActor, Uri $remoteActorId): void
     {
         // TODO: Implement requestAccepted() method.
         throw new RuntimeException(__FUNCTION__ . ' not implemented');
@@ -31,7 +31,7 @@ class FollowingStorage implements FollowingStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function requestRejected(LocalActorInterface $localActor, Uri $remoteActorId): void
+    public function reject(LocalActorInterface $localActor, Uri $remoteActorId): void
     {
         // TODO: Implement requestRejected() method.
         throw new RuntimeException(__FUNCTION__ . ' not implemented');

@@ -69,7 +69,7 @@ JSON;
         $followServiceMock = $this->createMock(FollowerStorageInterface::class);
         $followServiceMock
             ->expects(self::once())
-            ->method('addRequest')
+            ->method('add')
             ->with(
                 self::callback(fn($argument) => $argument instanceof LocalActorInterface
                     && $argument->getUsername() === 'service'),
@@ -114,7 +114,7 @@ JSON;
         $followServiceMock = $this->createMock(FollowingStorageInterface::class);
         $followServiceMock
             ->expects(self::once())
-            ->method('requestAccepted')
+            ->method('accept')
             ->with(
                 self::callback(fn($argument) => $argument instanceof LocalActorInterface
                     && $argument->getUsername() === 'service'),

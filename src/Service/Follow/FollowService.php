@@ -32,7 +32,7 @@ class FollowService implements FollowServiceInterface
      */
     public function follow(LocalActorInterface $localActor, Uri $remoteActorId): void
     {
-        $this->followingStorage->addRequest($localActor, $remoteActorId);
+        $this->followingStorage->add($localActor, $remoteActorId);
 
         $follow = new Follow();
         //TODO: Use Id
@@ -69,7 +69,7 @@ class FollowService implements FollowServiceInterface
      */
     public function acceptFollower(LocalActorInterface $localActor, Uri $remoteActorId): void
     {
-        $this->followerStorage->acceptRequest($localActor, $remoteActorId);
+        $this->followerStorage->accept($localActor, $remoteActorId);
 
         $accept = new Accept();
         //TODO: Use Id
@@ -90,7 +90,7 @@ class FollowService implements FollowServiceInterface
      */
     public function rejectFollower(LocalActorInterface $localActor, Uri $remoteActorId): void
     {
-        $this->followerStorage->rejectRequest($localActor, $remoteActorId);
+        $this->followerStorage->reject($localActor, $remoteActorId);
 
         $reject = new Reject();
         //TODO: Use Id

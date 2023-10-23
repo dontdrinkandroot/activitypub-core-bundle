@@ -14,7 +14,7 @@ class FollowInboxHandler implements InboxHandlerInterface
 {
     public function __construct(
         private readonly LocalActorServiceInterface $localActorService,
-        private readonly FollowerStorageInterface $followerService
+        private readonly FollowerStorageInterface $followerStorage
     ) {
     }
 
@@ -39,7 +39,7 @@ class FollowInboxHandler implements InboxHandlerInterface
             return new Response(status: Response::HTTP_NOT_FOUND);
         }
 
-        $this->followerService->addRequest($targetLocalActor, $remoteActorId);
+        $this->followerStorage->add($targetLocalActor, $remoteActorId);
 
         return new Response(status: Response::HTTP_ACCEPTED);
     }
