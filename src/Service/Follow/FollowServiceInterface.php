@@ -18,6 +18,8 @@ interface FollowServiceInterface
 
     public function findFollowingState(LocalActorInterface $localActor, Uri $remoteActorId): ?FollowState;
 
+    public function findFollowerState(LocalActorInterface $localActor, Uri $remoteActorId): ?FollowState;
+
     /**
      * @return Uri[]
      */

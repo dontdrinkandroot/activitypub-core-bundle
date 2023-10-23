@@ -130,6 +130,14 @@ class FollowService implements FollowServiceInterface
     /**
      * {@inheritdoc}
      */
+    public function findFollowerState(LocalActorInterface $localActor, Uri $remoteActorId): ?FollowState
+    {
+        return $this->followerStorage->findState($localActor, $remoteActorId);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getNumFollowers(
         LocalActorInterface $localActor,
         FollowState $followState = FollowState::ACCEPTED
