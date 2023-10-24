@@ -23,6 +23,8 @@ class AnnounceInboxHandler implements InboxHandlerInterface
      */
     public function handle(AbstractActivity $activity, Uri $signActorId, ?LocalActorInterface $inboxActor): ?Response
     {
+        // TODO: Avoid duplications as the announce is also shared with followers
+
         if (
             !($activity instanceof Announce)
             || null === ($objectId = $activity->object?->getId())
