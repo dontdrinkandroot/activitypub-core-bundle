@@ -67,4 +67,13 @@ class FollowerStorage implements FollowerStorageInterface
         // TODO: Implement count() method.
         throw new RuntimeException(__FUNCTION__ . ' not implemented');
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findState(LocalActorInterface $localActor, Uri $remoteActorId): ?FollowState
+    {
+        // TODO: Implement findState() method.
+        throw new RuntimeException(__FUNCTION__ . ' not implemented');
+    }
 }
