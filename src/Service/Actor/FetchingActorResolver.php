@@ -18,15 +18,6 @@ class FetchingActorResolver implements ActorResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(Uri $actorId): ?Actor
-    {
-        $coreType = $this->activityPubClient->request('GET', $actorId);
-        return Asserted::instanceOf($coreType, ActivityPubActor::class);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function resolvePublicKey(Uri $actorId): ?string
     {
         return $this->resolve($actorId)?->publicKey?->publicKeyPem;
@@ -38,5 +29,11 @@ class FetchingActorResolver implements ActorResolverInterface
     public function resolveInbox(Uri $actorId): ?Uri
     {
         return $this->resolve($actorId)?->inbox;
+    }
+
+    private function resolve(Uri $actorId): ?Actor
+    {
+        $coreType = $this->activityPubClient->request('GET', $actorId);
+        return Asserted::instanceOf($coreType, ActivityPubActor::class);
     }
 }

@@ -40,14 +40,6 @@ JSON;
             publicKeyPem: $keyPair->publicKey
         );
 
-        $signActor = new Person();
-        $signActor->id = $signActorId;
-        $signActor->publicKey = new PublicKey(
-            id: $signKey->id,
-            owner: $signKey->owner,
-            publicKeyPem: $signKey->publicKeyPem
-        );
-
         $headers = [
             Header::HOST => 'mastodon.localdomain',
             Header::ACCEPT => 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"',
@@ -71,7 +63,7 @@ JSON;
         $this->assertArrayHasKey('Content-Type', $headers);
 
         $actorService = $this->createMock(ActorResolverInterface::class);
-        $actorService->method('resolve')->willReturn($signActor);
+        $actorService->method('resolvePublicKey')->willReturn($signKey->publicKeyPem);
         $signatureVerifier = new SignatureVerifier($actorService);
 
         $request = Request::create(

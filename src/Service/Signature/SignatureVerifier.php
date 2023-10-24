@@ -30,11 +30,7 @@ class SignatureVerifier implements SignatureVerifierInterface
 
         $signatureParts = $this->parseSignatureHeader($signatureHeader);
         $signActorId = $this->getActorIriFromKeyId($signatureParts['keyId']);
-        $signActor = $this->actorService->resolve($signActorId);
-        if (null === $signActor) {
-            throw new Exception('Unknown Actor: ' . $signActorId);
-        }
-        if (null === ($signActorPublicKeyPem = $signActor->publicKey?->publicKeyPem)) {
+        if (null === ($signActorPublicKeyPem = $this->actorService->resolvePublicKey($signActorId))) {
             throw new Exception('Actor has no public key: ' . $signActorId);
         }
 
