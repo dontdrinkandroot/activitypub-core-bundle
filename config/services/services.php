@@ -2,12 +2,13 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Config\Services;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Controller\ActorAction;
-use Dontdrinkandroot\ActivityPubCoreBundle\Controller\FollowersAction;
-use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Inbox\GetAction as InboxGetAction;
-use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Inbox\PostAction as InboxPostAction;
-use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Outbox\GetAction as OutboxGetAction;
-use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Outbox\PostAction as OutboxPostAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\GetAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\FollowersAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Inbox\GetAction as InboxGetAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Inbox\PostAction as InboxPostAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox\GetAction as OutboxGetAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox\PostAction as OutboxPostAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\SharedInboxAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\WebfingerAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener\ResponseForFormatListener;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\Param;
@@ -140,7 +141,14 @@ return function (ContainerConfigurator $configurator): void {
         ->tag(Tag::CONTROLLER);
 
     $services
-        ->set(ActorAction::class)
+        ->set(SharedInboxAction::class)
+        ->arg('$handlers', tagged_iterator(Tag::INBOX_HANDLER))
+        ->autowire()
+        ->autoconfigure()
+        ->tag(Tag::CONTROLLER);
+
+    $services
+        ->set(GetAction::class)
         ->autowire()
         ->autoconfigure()
         ->tag(Tag::CONTROLLER);

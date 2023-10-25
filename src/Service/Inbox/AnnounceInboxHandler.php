@@ -21,7 +21,7 @@ class AnnounceInboxHandler implements InboxHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(AbstractActivity $activity, Uri $signActorId, ?LocalActorInterface $inboxActor): ?Response
+    public function handle(AbstractActivity $activity, Uri $signActorId, ?LocalActorInterface $inboxActor = null): ?Response
     {
         // TODO: Avoid duplications as the announce is also shared with followers
 

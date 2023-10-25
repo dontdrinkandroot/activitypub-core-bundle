@@ -2,6 +2,7 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor;
 
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\Route;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\Common\Asserted;
@@ -24,11 +25,28 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
     public function generateId(LocalActorInterface|string $usernameOrLocalActor): Uri
     {
         $this->urlMatcher->getContext()->setHost($this->host);
+        $this->urlMatcher->getContext()->setScheme('https');
         $username = $this->getUsername($usernameOrLocalActor);
         return Uri::fromString(
             $this->urlGenerator->generate(
-                'ddr.activitypub.core.actor.get',
+                Route::GET_ACTOR,
                 ['username' => $username],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            )
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function generateSharedInbox(): Uri
+    {
+        $this->urlMatcher->getContext()->setHost($this->host);
+        $this->urlMatcher->getContext()->setScheme('https');
+        return Uri::fromString(
+            $this->urlGenerator->generate(
+                Route::POST_SHARED_INBOX,
+                [],
                 UrlGeneratorInterface::ABSOLUTE_URL
             )
         );
@@ -40,10 +58,11 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
     public function generateInbox(LocalActorInterface|string $usernameOrLocalActor): Uri
     {
         $this->urlMatcher->getContext()->setHost($this->host);
+        $this->urlMatcher->getContext()->setScheme('https');
         $username = $this->getUsername($usernameOrLocalActor);
         return Uri::fromString(
             $this->urlGenerator->generate(
-                'ddr.activitypub.core.inbox.get',
+                Route::GET_ACTOR_INBOX,
                 ['username' => $username],
                 UrlGeneratorInterface::ABSOLUTE_URL
             )
@@ -56,10 +75,11 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
     public function generateOutbox(LocalActorInterface|string $usernameOrLocalActor): Uri
     {
         $this->urlMatcher->getContext()->setHost($this->host);
+        $this->urlMatcher->getContext()->setScheme('https');
         $username = $this->getUsername($usernameOrLocalActor);
         return Uri::fromString(
             $this->urlGenerator->generate(
-                'ddr.activitypub.core.outbox.get',
+                Route::GET_ACTOR_OUTBOX,
                 ['username' => $username],
                 UrlGeneratorInterface::ABSOLUTE_URL
             )
@@ -72,6 +92,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
     public function generateFollowers(LocalActorInterface|string $usernameOrLocalActor, ?int $page = null): Uri
     {
         $this->urlMatcher->getContext()->setHost($this->host);
+        $this->urlMatcher->getContext()->setScheme('https');
         $username = $this->getUsername($usernameOrLocalActor);
         $parameters = ['username' => $username];
         if (null !== $page) {
@@ -79,7 +100,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
         }
         return Uri::fromString(
             $this->urlGenerator->generate(
-                'ddr.activitypub.core.followers.get',
+                Route::GET_ACTOR_FOLLOWERS,
                 $parameters,
                 UrlGeneratorInterface::ABSOLUTE_URL
             )
@@ -92,6 +113,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
     public function generateFollowing(LocalActorInterface|string $usernameOrLocalActor, ?int $page = null): Uri
     {
         $this->urlMatcher->getContext()->setHost($this->host);
+        $this->urlMatcher->getContext()->setScheme('https');
         $username = $this->getUsername($usernameOrLocalActor);
         $parameters = ['username' => $username];
         if (null !== $page) {
@@ -99,7 +121,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
         }
         return Uri::fromString(
             $this->urlGenerator->generate(
-                'ddr.activitypub.core.following.get',
+                Route::GET_ACTOR_FOLLOWING,
                 $parameters,
                 UrlGeneratorInterface::ABSOLUTE_URL
             )
@@ -123,7 +145,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
             return null;
         }
 
-        if ('ddr.activitypub.core.actor.get' !== ($parameters['_route'] ?? null)) {
+        if (Route::GET_ACTOR !== ($parameters['_route'] ?? null)) {
             return null;
         }
 

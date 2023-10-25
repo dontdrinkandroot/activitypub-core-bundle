@@ -1,6 +1,6 @@
 <?php
 
-namespace Dontdrinkandroot\ActivityPubCoreBundle\Controller;
+namespace Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\OrderedCollection;

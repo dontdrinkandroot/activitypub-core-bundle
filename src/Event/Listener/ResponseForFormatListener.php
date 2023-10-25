@@ -2,6 +2,7 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener;
 
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\Route;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ActivityStreamEncoder;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,7 @@ class ResponseForFormatListener
     {
         $request = $event->getRequest();
         $route = $request->attributes->get('_route');
-        if (!is_string($route) || !str_starts_with($route, 'ddr.activitypub.')) {
+        if (!is_string($route) || !str_starts_with($route, Route::DDR_ACTIVITYPUB_PREFIX)) {
             return;
         }
 

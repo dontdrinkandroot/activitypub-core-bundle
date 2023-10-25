@@ -1,6 +1,6 @@
 <?php
 
-namespace Dontdrinkandroot\ActivityPubCoreBundle\Controller\Inbox;
+namespace Dontdrinkandroot\ActivityPubCoreBundle\Controller;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\AbstractActivity;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class PostAction extends AbstractController
+class SharedInboxAction extends AbstractController
 {
     /**
      * @param iterable<InboxHandlerInterface> $handlers
@@ -22,26 +22,19 @@ class PostAction extends AbstractController
     public function __construct(
         private readonly SignatureVerifierInterface $signatureVerifier,
         private readonly SerializerInterface $serializer,
-        private readonly LocalActorServiceInterface $localActorService,
         private readonly iterable $handlers
     ) {
     }
 
-    public function __invoke(Request $request, string $username): Response
+    public function __invoke(Request $request): Response
     {
-        if (null === ($localActor = $this->localActorService->findLocalActorByUsername($username))) {
-            return new JsonResponse(
-                data: ['error' => 'Actor not found'],
-                status: Response::HTTP_NOT_FOUND
-            );
-        }
-
         $signActorId = $this->signatureVerifier->verifyRequest($request);
         $coreType = $this->serializer->deserialize(
             $request->getContent(),
             CoreType::class,
             ActivityStreamEncoder::FORMAT
         );
+
         if (!$coreType instanceof AbstractActivity) {
             return new JsonResponse(
                 data: ['error' => 'Not an Activity'],
@@ -50,7 +43,7 @@ class PostAction extends AbstractController
         }
 
         foreach ($this->handlers as $handler) {
-            $response = $handler->handle($coreType, $signActorId, $localActor);
+            $response = $handler->handle($coreType, $signActorId);
             if (null !== $response) {
                 return $response;
             }

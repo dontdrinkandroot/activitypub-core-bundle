@@ -1,6 +1,6 @@
 <?php
 
-namespace Dontdrinkandroot\ActivityPubCoreBundle\Controller\Outbox;
+namespace Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox;
 
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

@@ -2,13 +2,15 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Routing;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Controller\ActorAction;
-use Dontdrinkandroot\ActivityPubCoreBundle\Controller\FollowersAction;
-use Dontdrinkandroot\ActivityPubCoreBundle\Controller\FollowingAction;
-use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Inbox\GetAction as InboxGetAction;
-use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Inbox\PostAction as InboxPostAction;
-use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Outbox\GetAction as OutboxGetAction;
-use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Outbox\PostAction as OutboxPostAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\GetAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\FollowersAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\FollowingAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Inbox\GetAction as InboxGetAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Inbox\PostAction as InboxPostAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox\GetAction as OutboxGetAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox\PostAction as OutboxPostAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\SharedInboxAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\WebfingerAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\Route as RouteName;
 use RuntimeException;
 use Symfony\Component\Config\Loader\Loader;
@@ -43,6 +45,24 @@ class RoutingLoader extends Loader
         }
 
         $routes = new RouteCollection();
+
+        $route = new Route(
+            path: '/.well-known/webfinger',
+            defaults: [
+                '_controller' => WebfingerAction::class,
+            ],
+            methods: ['GET'],
+        );
+        $routes->add(RouteName::WEBFINGER, $route);
+
+        $route = new Route(
+            path: '/inbox',
+            defaults: [
+                '_controller' => SharedInboxAction::class
+            ],
+            methods: ['POST'],
+        );
+        $routes->add(RouteName::POST_SHARED_INBOX, $route);
 
         $actorPathPrefix = $this->actorPathPrefix . '{username}';
 
@@ -103,7 +123,7 @@ class RoutingLoader extends Loader
         $route = new Route(
             $actorPathPrefix,
             defaults: [
-                '_controller' => ActorAction::class,
+                '_controller' => GetAction::class,
             ],
             methods: ['GET'],
         );

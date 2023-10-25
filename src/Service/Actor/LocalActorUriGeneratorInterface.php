@@ -7,6 +7,8 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 
 interface LocalActorUriGeneratorInterface
 {
+    public function generateSharedInbox(): Uri;
+
     public function generateId(LocalActorInterface|string $usernameOrLocalActor): Uri;
 
     public function generateInbox(LocalActorInterface|string $usernameOrLocalActor): Uri;

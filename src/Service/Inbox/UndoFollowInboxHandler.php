@@ -24,8 +24,11 @@ class UndoFollowInboxHandler implements InboxHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(AbstractActivity $activity, Uri $signActorId, ?LocalActorInterface $inboxActor): ?Response
-    {
+    public function handle(
+        AbstractActivity $activity,
+        Uri $signActorId,
+        ?LocalActorInterface $inboxActor = null
+    ): ?Response {
         if (
             !($activity instanceof Undo)
             || (null === $activity->object)

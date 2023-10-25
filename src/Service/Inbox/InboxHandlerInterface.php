@@ -9,5 +9,5 @@ use Symfony\Component\HttpFoundation\Response;
 
 interface InboxHandlerInterface
 {
-    public function handle(AbstractActivity $activity, Uri $signActorId, ?LocalActorInterface $inboxActor): ?Response;
+    public function handle(AbstractActivity $activity, Uri $signActorId, ?LocalActorInterface $inboxActor = null): ?Response;
 }
