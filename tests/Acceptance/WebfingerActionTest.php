@@ -23,7 +23,7 @@ class WebfingerActionTest extends WebTestCase
                 [
                     'rel' => 'self',
                     'type' => 'application/activity+json',
-                    'href' => 'http://localhost/@person',
+                    'href' => 'https://localhost/@person',
                 ]
             ]
         ], $data);

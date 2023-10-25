@@ -59,10 +59,10 @@ JSON;
         $json = <<<JSON
 {
     "@context": "https://www.w3.org/ns/activitystreams",
-    "id": "http://localhost/@person/activities/12345",
+    "id": "https://localhost/@person/activities/12345",
     "type": "Follow",
-    "actor": "http://localhost/@person",
-    "object": "http://localhost/@service"
+    "actor": "https://localhost/@person",
+    "object": "https://localhost/@service"
 }
 JSON;
 
@@ -74,13 +74,13 @@ JSON;
                 self::callback(fn($argument) => $argument instanceof LocalActorInterface
                     && $argument->getUsername() === 'service'),
                 self::callback(fn($argument) => $argument instanceof Uri
-                    && $argument->__toString() === 'http://localhost/@person')
+                    && $argument->__toString() === 'https://localhost/@person')
             );
         self::getContainer()->set(FollowerStorageInterface::class, $followServiceMock);
 
         $activityPubClient->request(
             method: 'POST',
-            uri: Uri::fromString('http://localhost/@service/inbox'),
+            uri: Uri::fromString('https://localhost/@service/inbox'),
             content: $json,
             signKey: $signKey
         );
@@ -101,12 +101,12 @@ JSON;
     "@context": "https://www.w3.org/ns/activitystreams",
     "id": "http://localhost/@person/activities/12346",
     "type": "Accept",
-    "actor": "http://localhost/@person",
+    "actor": "https://localhost/@person",
     "object": {
         "id": "http://localhost/@service/activities/12345",
         "type": "Follow",
-        "actor": "http://localhost/@service",
-        "object": "http://localhost/@person"
+        "actor": "https://localhost/@service",
+        "object": "https://localhost/@person"
     }
 }
 JSON;
@@ -119,13 +119,13 @@ JSON;
                 self::callback(fn($argument) => $argument instanceof LocalActorInterface
                     && $argument->getUsername() === 'service'),
                 self::callback(fn($argument) => $argument instanceof Uri
-                    && $argument->__toString() === 'http://localhost/@person')
+                    && $argument->__toString() === 'https://localhost/@person')
             );
         self::getContainer()->set(FollowingStorageInterface::class, $followServiceMock);
 
         $activityPubClient->request(
             method: 'POST',
-            uri: Uri::fromString('http://localhost/@service/inbox'),
+            uri: Uri::fromString('https://localhost/@service/inbox'),
             content: $json,
             signKey: $signKey
         );
@@ -146,12 +146,12 @@ JSON;
     "@context": "https://www.w3.org/ns/activitystreams",
     "id": "http://localhost/@person/activities/12347",
     "type": "Undo",
-    "actor": "http://localhost/@person",
+    "actor": "https://localhost/@person",
     "object": {
-        "id": "http://localhost/@person/activities/12345",
+        "id": "https://localhost/@person/activities/12345",
         "type": "Follow",
-        "actor": "http://localhost/@person",
-        "object": "http://localhost/@service"
+        "actor": "https://localhost/@person",
+        "object": "https://localhost/@service"
     }
 }
 JSON;
@@ -164,13 +164,13 @@ JSON;
                 self::callback(fn($argument) => $argument instanceof LocalActorInterface
                     && $argument->getUsername() === 'service'),
                 self::callback(fn($argument) => $argument instanceof Uri
-                    && $argument->__toString() === 'http://localhost/@person')
+                    && $argument->__toString() === 'https://localhost/@person')
             );
         self::getContainer()->set(FollowerStorageInterface::class, $followServiceMock);
 
         $activityPubClient->request(
             method: 'POST',
-            uri: Uri::fromString('http://localhost/@service/inbox'),
+            uri: Uri::fromString('https://localhost/@service/inbox'),
             content: $json,
             signKey: $signKey
         );

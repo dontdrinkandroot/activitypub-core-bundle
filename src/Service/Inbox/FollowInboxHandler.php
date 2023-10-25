@@ -21,7 +21,11 @@ class FollowInboxHandler implements InboxHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(AbstractActivity $activity, Uri $signActorId, ?LocalActorInterface $inboxActor = nullb): ?Response
+    public function handle(
+        AbstractActivity $activity,
+        Uri $signActorId,
+        ?LocalActorInterface $inboxActor = null
+    ): ?Response
     {
         if (
             (!$activity instanceof Follow)

@@ -26,8 +26,8 @@ class AnnounceTest extends WebTestCase
     "@context": "https://www.w3.org/ns/activitystreams",
     "id": "http://localhost/@service/activities/1",
     "type": "Announce",
-    "actor": "http://localhost/@service",
-    "object": "http://localhost/@person/note/1"
+    "actor": "https://localhost/@service",
+    "object": "https://localhost/@person/note/1"
 }
 JSON;
 
@@ -35,7 +35,7 @@ JSON;
         $localObjectResolverMock
             ->expects(self::once())
             ->method('hasObject')
-            ->with($this->uriMatcher('http://localhost/@person/note/1'))
+            ->with($this->uriMatcher('https://localhost/@person/note/1'))
             ->willReturn(true);
         self::getContainer()->set(LocalObjectResolverInterface::class, $localObjectResolverMock);
 
@@ -44,14 +44,14 @@ JSON;
             ->expects(self::once())
             ->method('shared')
             ->with(
-                $this->uriMatcher('http://localhost/@service'),
-                $this->uriMatcher('http://localhost/@person/note/1'),
+                $this->uriMatcher('https://localhost/@service'),
+                $this->uriMatcher('https://localhost/@person/note/1'),
             );
         self::getContainer()->set(ShareServiceInterface::class, $shareServiceMock);
 
         $response = $activityPubClient->request(
             method: 'POST',
-            uri: Uri::fromString('http://localhost/@person/inbox'),
+            uri: Uri::fromString('https://localhost/@person/inbox'),
             content: $json,
             signKey: $signKey
         );

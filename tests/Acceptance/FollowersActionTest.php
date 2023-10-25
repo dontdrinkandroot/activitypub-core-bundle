@@ -26,8 +26,8 @@ class FollowersActionTest extends WebTestCase
             '@context' => 'https://www.w3.org/ns/activitystreams',
             'type' => 'OrderedCollection',
             'totalItems' => 9,
-            'first' => 'http://localhost/@person/followers?page=1',
-            'id' => 'http://localhost/@person/followers',
+            'first' => 'https://localhost/@person/followers?page=1',
+            'id' => 'https://localhost/@person/followers',
         ], json_decode($content, true, 512, JSON_THROW_ON_ERROR));
     }
 
@@ -39,10 +39,10 @@ class FollowersActionTest extends WebTestCase
         $followerStorage = $this->createMock(FollowerStorageInterface::class);
         $followerStorage->expects(self::once())->method('count')->willReturn(4);
         $followerStorage->expects(self::once())->method('list')->willReturn([
-            Uri::fromString('http://localhost/@alpha'),
-            Uri::fromString('http://localhost/@beta'),
-            Uri::fromString('http://localhost/@gamma'),
-            Uri::fromString('http://localhost/@delta'),
+            Uri::fromString('https://localhost/@alpha'),
+            Uri::fromString('https://localhost/@beta'),
+            Uri::fromString('https://localhost/@gamma'),
+            Uri::fromString('https://localhost/@delta'),
         ]);
         self::getContainer()->set(FollowerStorageInterface::class, $followerStorage);
 
@@ -55,14 +55,14 @@ class FollowersActionTest extends WebTestCase
             '@context' => 'https://www.w3.org/ns/activitystreams',
             'type' => 'OrderedCollectionPage',
             'totalItems' => 4,
-            'partOf' => 'http://localhost/@person/followers',
+            'partOf' => 'https://localhost/@person/followers',
             'orderedItems' => [
-                'http://localhost/@alpha',
-                'http://localhost/@beta',
-                'http://localhost/@gamma',
-                'http://localhost/@delta',
+                'https://localhost/@alpha',
+                'https://localhost/@beta',
+                'https://localhost/@gamma',
+                'https://localhost/@delta',
             ],
-            'id' => 'http://localhost/@person/followers?page=1',
+            'id' => 'https://localhost/@person/followers?page=1',
         ], json_decode($content, true, 512, JSON_THROW_ON_ERROR));
     }
 }
