@@ -6,7 +6,6 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\SignKey;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Client\ActivityPubClientInterface;
 use Dontdrinkandroot\Common\Asserted;
 use RuntimeException;
 
@@ -17,14 +16,13 @@ class ObjectResolver implements ObjectResolverInterface
      */
     public function __construct(
         private readonly iterable $providers,
-        private readonly ActivityPubClientInterface $activityPubClient
     ) {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function resolve(Uri|LinkableObject $object, ?SignKey $signKey = null): CoreType
+    public function resolve(Uri|LinkableObject $object, ?SignKey $signKey = null): ?CoreType
     {
         if ($object instanceof LinkableObject) {
             if ($object->isObject()) {
@@ -37,23 +35,23 @@ class ObjectResolver implements ObjectResolverInterface
 
         foreach ($this->providers as $provider) {
             $result = $provider->provide($uri, $signKey);
-            if (null !== $result) {
-                throw new RuntimeException('Object was not found');
-            }
             if (false !== $result) {
                 return $result;
             }
         }
 
-        throw throw new RuntimeException('No resolver could resolve object');
+        return null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function resolveTyped(Uri|LinkableObject $object, string $type, ?SignKey $signKey = null): CoreType
+    public function resolveTyped(Uri|LinkableObject $object, string $type, ?SignKey $signKey = null): ?CoreType
     {
         $resolvedObject = $this->resolve($object, $signKey);
+        if (null === $resolvedObject) {
+            return null;
+        }
         if (!$resolvedObject instanceof $type) {
             throw new RuntimeException('Resolved object is not of type ' . $type);
         }

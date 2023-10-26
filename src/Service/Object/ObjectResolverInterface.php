@@ -9,12 +9,12 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 
 interface ObjectResolverInterface
 {
-    public function resolve(LinkableObject|Uri $object, ?SignKey $signKey = null): CoreType;
+    public function resolve(LinkableObject|Uri $object, ?SignKey $signKey = null): ?CoreType;
 
     /**
      * @template T of CoreType
      * @param class-string<T> $type
-     * @return T
+     * @return T|null
      */
-    public function resolveTyped(LinkableObject|Uri $object, string $type, ?SignKey $signKey = null): CoreType;
+    public function resolveTyped(LinkableObject|Uri $object, string $type, ?SignKey $signKey = null): ?CoreType;
 }

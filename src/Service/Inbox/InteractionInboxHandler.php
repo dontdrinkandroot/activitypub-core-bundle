@@ -4,19 +4,22 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\AbstractActivity;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Announce;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Dislike;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Like;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\LocalObjectResolverInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Share\InteractionServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class InteractionInboxHandler implements InboxHandlerInterface
 {
     public function __construct(
-        private readonly LocalObjectResolverInterface $localObjectResolver,
-        private readonly InteractionServiceInterface $interactionService
+        private readonly ObjectResolverInterface $objectResolver,
+        private readonly InteractionServiceInterface $interactionService,
+        private readonly LocalActorServiceInterface $localActorService
     ) {
     }
 
@@ -28,11 +31,9 @@ class InteractionInboxHandler implements InboxHandlerInterface
         Uri $signActorId,
         ?LocalActorInterface $inboxActor = null
     ): ?Response {
-        // TODO: Avoid duplications as the announce is also shared with followers
-
         if (
             !(($activity instanceof Announce) || ($activity instanceof Like) || ($activity instanceof Dislike))
-            || null === ($objectId = $activity->object?->getId())
+            || null === ($object = $activity->object)
             || null === ($activityActorId = $activity->actor?->getSingleValueId())
         ) {
             return null;
@@ -42,11 +43,34 @@ class InteractionInboxHandler implements InboxHandlerInterface
             return new Response(status: Response::HTTP_FORBIDDEN);
         }
 
-        if (!$this->localObjectResolver->hasObject($objectId)) {
+        $resolvedObject = $this->objectResolver->resolve($object);
+        if (null === $resolvedObject) {
             return new Response(status: Response::HTTP_NOT_FOUND);
         }
+        if (!$resolvedObject instanceof CoreObject) {
+            return new Response(status: Response::HTTP_BAD_REQUEST);
+        }
 
-        $this->interactionService->incoming($activity->getId(), $activity->getType(), $activityActorId, $objectId);
+        $attributedTo = $resolvedObject->attributedTo;
+        if (null === $attributedTo || null === ($attributedToId = $attributedTo->getSingleValueId())) {
+            return new Response(status: Response::HTTP_BAD_REQUEST);
+        }
+
+        $localActor = $this->localActorService->findLocalActorByUri($attributedToId);
+        if (null === $this->localActorService->findLocalActorByUri($attributedToId)) {
+            return new Response(status: Response::HTTP_BAD_REQUEST);
+        }
+
+        if (null !== $localActor) {
+            $this->interactionService->incoming(
+                $activity->getId(),
+                $activity->getType(),
+                $activityActorId,
+                $resolvedObject->getId()
+            );
+        } else {
+            // TODO: This is just a notification
+        }
 
         return new Response(status: Response::HTTP_ACCEPTED);
     }
