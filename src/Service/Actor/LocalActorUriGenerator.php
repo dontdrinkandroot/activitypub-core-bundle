@@ -2,7 +2,7 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\Route;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\RouteName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\Common\Asserted;
@@ -29,7 +29,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
         $username = $this->getUsername($usernameOrLocalActor);
         return Uri::fromString(
             $this->urlGenerator->generate(
-                Route::GET_ACTOR,
+                RouteName::GET_ACTOR,
                 ['username' => $username],
                 UrlGeneratorInterface::ABSOLUTE_URL
             )
@@ -45,7 +45,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
         $this->urlMatcher->getContext()->setScheme('https');
         return Uri::fromString(
             $this->urlGenerator->generate(
-                Route::POST_SHARED_INBOX,
+                RouteName::POST_SHARED_INBOX,
                 [],
                 UrlGeneratorInterface::ABSOLUTE_URL
             )
@@ -62,7 +62,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
         $username = $this->getUsername($usernameOrLocalActor);
         return Uri::fromString(
             $this->urlGenerator->generate(
-                Route::GET_ACTOR_INBOX,
+                RouteName::GET_ACTOR_INBOX,
                 ['username' => $username],
                 UrlGeneratorInterface::ABSOLUTE_URL
             )
@@ -79,7 +79,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
         $username = $this->getUsername($usernameOrLocalActor);
         return Uri::fromString(
             $this->urlGenerator->generate(
-                Route::GET_ACTOR_OUTBOX,
+                RouteName::GET_ACTOR_OUTBOX,
                 ['username' => $username],
                 UrlGeneratorInterface::ABSOLUTE_URL
             )
@@ -100,7 +100,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
         }
         return Uri::fromString(
             $this->urlGenerator->generate(
-                Route::GET_ACTOR_FOLLOWERS,
+                RouteName::GET_ACTOR_FOLLOWERS,
                 $parameters,
                 UrlGeneratorInterface::ABSOLUTE_URL
             )
@@ -121,7 +121,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
         }
         return Uri::fromString(
             $this->urlGenerator->generate(
-                Route::GET_ACTOR_FOLLOWING,
+                RouteName::GET_ACTOR_FOLLOWING,
                 $parameters,
                 UrlGeneratorInterface::ABSOLUTE_URL
             )
@@ -145,7 +145,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
             return null;
         }
 
-        if (Route::GET_ACTOR !== ($parameters['_route'] ?? null)) {
+        if (RouteName::GET_ACTOR !== ($parameters['_route'] ?? null)) {
             return null;
         }
 

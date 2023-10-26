@@ -11,8 +11,8 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox\PostAction as
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\SharedInboxAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\WebfingerAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener\ResponseForFormatListener;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\Param;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\Tag;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\ParamName;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Routing\RoutingLoader;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\TypeClassRegistry;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\ActorResolverInterface;
@@ -25,7 +25,8 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Service\Delivery\DeliveryServiceInter
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowService;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowStorageInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\FetchingObjectResolver;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\FetchingObjectProvider;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolver;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\KeyPairGenerator;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\KeyPairGeneratorInterface;
@@ -50,8 +51,8 @@ return function (ContainerConfigurator $configurator): void {
 
     $services
         ->set(RoutingLoader::class)
-        ->args([param(Param::ACTOR_PATH_PREFIX)])
-        ->tag(Tag::ROUTING_LOADER);
+        ->args([param(ParamName::ACTOR_PATH_PREFIX)])
+        ->tag(TagName::ROUTING_LOADER);
 
     $services
         ->set(TypeClassRegistry::class);
@@ -106,7 +107,7 @@ return function (ContainerConfigurator $configurator): void {
         ->args([
             service(UrlGeneratorInterface::class),
             service(UrlMatcherInterface::class),
-            param(Param::HOST)
+            param(ParamName::HOST)
         ]);
     $services->alias(LocalActorUriGeneratorInterface::class, LocalActorUriGenerator::class);
 
@@ -117,17 +118,23 @@ return function (ContainerConfigurator $configurator): void {
         ]);
     $services->alias(WebFingerServiceInterface::class, CachedWebFingerService::class);
 
-    $services->set(FetchingObjectResolver::class)
+    $services->set(FetchingObjectProvider::class)
         ->args([
-            service(ActivityPubClientInterface::class)
+            service(ActivityPubClientInterface::class),
+        ])
+        ->tag(TagName::OBJECT_PROVIDER, ['priority' => -256]);
+
+    $services->set(ObjectResolver::class)
+        ->args([
+            tagged_iterator(TagName::OBJECT_PROVIDER)
         ]);
-    $services->alias(ObjectResolverInterface::class, FetchingObjectResolver::class);
+    $services->alias(ObjectResolverInterface::class, ObjectResolver::class);
 
     $services->set(ResponseForFormatListener::class)
         ->args([
             service(SerializerInterface::class),
         ])
-        ->tag(Tag::KERNEL_EVENT_LISTENER, ['event' => 'kernel.view', 'method' => 'onView']);
+        ->tag(TagName::KERNEL_EVENT_LISTENER, ['event' => 'kernel.view', 'method' => 'onView']);
 
     /*
      * Controllers
@@ -136,49 +143,49 @@ return function (ContainerConfigurator $configurator): void {
         ->set(WebfingerAction::class)
         ->autowire()
         ->autoconfigure()
-        ->tag(Tag::CONTROLLER);
+        ->tag(TagName::CONTROLLER);
 
     $services
         ->set(SharedInboxAction::class)
-        ->arg('$handlers', tagged_iterator(Tag::INBOX_HANDLER))
+        ->arg('$handlers', tagged_iterator(TagName::INBOX_HANDLER))
         ->autowire()
         ->autoconfigure()
-        ->tag(Tag::CONTROLLER);
+        ->tag(TagName::CONTROLLER);
 
     $services
         ->set(GetAction::class)
         ->autowire()
         ->autoconfigure()
-        ->tag(Tag::CONTROLLER);
+        ->tag(TagName::CONTROLLER);
 
     $services
         ->set(InboxGetAction::class)
         ->autowire()
         ->autoconfigure()
-        ->tag(Tag::CONTROLLER);
+        ->tag(TagName::CONTROLLER);
 
     $services
         ->set(InboxPostAction::class)
-        ->arg('$handlers', tagged_iterator(Tag::INBOX_HANDLER))
+        ->arg('$handlers', tagged_iterator(TagName::INBOX_HANDLER))
         ->autowire()
         ->autoconfigure()
-        ->tag(Tag::CONTROLLER);
+        ->tag(TagName::CONTROLLER);
 
     $services
         ->set(OutboxGetAction::class)
         ->autowire()
         ->autoconfigure()
-        ->tag(Tag::CONTROLLER);
+        ->tag(TagName::CONTROLLER);
 
     $services
         ->set(OutboxPostAction::class)
         ->autowire()
         ->autoconfigure()
-        ->tag(Tag::CONTROLLER);
+        ->tag(TagName::CONTROLLER);
 
     $services
         ->set(FollowersAction::class)
         ->autowire()
         ->autoconfigure()
-        ->tag(Tag::CONTROLLER);
+        ->tag(TagName::CONTROLLER);
 };

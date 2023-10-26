@@ -2,9 +2,10 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\DependencyInjection;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\Param;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\Tag;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\ParamName;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\InboxHandlerInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectProviderInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -24,10 +25,14 @@ class DdrActivityPubCoreExtension extends Extension implements PrependExtensionI
 
         $container
             ->registerForAutoconfiguration(InboxHandlerInterface::class)
-            ->addTag(Tag::INBOX_HANDLER);
+            ->addTag(TagName::INBOX_HANDLER);
 
-        $container->setParameter(Param::HOST, $config['host']);
-        $container->setParameter(Param::ACTOR_PATH_PREFIX, $config['actor_path_prefix']);
+        $container
+            ->registerForAutoconfiguration(ObjectProviderInterface::class)
+            ->addTag(TagName::OBJECT_PROVIDER);
+
+        $container->setParameter(ParamName::HOST, $config['host']);
+        $container->setParameter(ParamName::ACTOR_PATH_PREFIX, $config['actor_path_prefix']);
 
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../config/services'));
         $loader->load('services.php');

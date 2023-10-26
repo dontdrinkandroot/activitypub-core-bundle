@@ -6,7 +6,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Client\ActivityPubClientInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\LocalObjectResolverInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Share\ShareServiceInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Share\InteractionServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\WebTestCase;
 
 class AnnounceTest extends WebTestCase
@@ -39,15 +39,15 @@ JSON;
             ->willReturn(true);
         self::getContainer()->set(LocalObjectResolverInterface::class, $localObjectResolverMock);
 
-        $shareServiceMock = $this->createMock(ShareServiceInterface::class);
+        $shareServiceMock = $this->createMock(InteractionServiceInterface::class);
         $shareServiceMock
             ->expects(self::once())
-            ->method('shared')
+            ->method('incoming')
             ->with(
                 $this->uriMatcher('https://localhost/@service'),
                 $this->uriMatcher('https://localhost/@person/note/1'),
             );
-        self::getContainer()->set(ShareServiceInterface::class, $shareServiceMock);
+        self::getContainer()->set(InteractionServiceInterface::class, $shareServiceMock);
 
         $response = $activityPubClient->request(
             method: 'POST',

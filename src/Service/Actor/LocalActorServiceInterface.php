@@ -13,6 +13,11 @@ interface LocalActorServiceInterface
 
     public function findLocalActorByUri(Uri $uri): ?LocalActorInterface;
 
+    /**
+     * TODO: Maybe deprecate and move to object provider
+     * @param LocalActorInterface $localActor
+     * @return Actor
+     */
     public function toActivityPubActor(LocalActorInterface $localActor): Actor;
 
     public function getSignKey(LocalActorInterface $localActor): SignKey;

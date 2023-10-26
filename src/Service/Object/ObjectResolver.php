@@ -10,10 +10,15 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Service\Client\ActivityPubClientInter
 use Dontdrinkandroot\Common\Asserted;
 use RuntimeException;
 
-class FetchingObjectResolver implements ObjectResolverInterface
+class ObjectResolver implements ObjectResolverInterface
 {
-    public function __construct(private readonly ActivityPubClientInterface $activityPubClient)
-    {
+    /**
+     * @param iterable<ObjectProviderInterface> $providers
+     */
+    public function __construct(
+        private readonly iterable $providers,
+        private readonly ActivityPubClientInterface $activityPubClient
+    ) {
     }
 
     /**
@@ -30,8 +35,17 @@ class FetchingObjectResolver implements ObjectResolverInterface
             $uri = $object;
         }
 
-        return $this->activityPubClient->request('GET', $uri)
-            ?? throw new RuntimeException('Could not resolve object');
+        foreach ($this->providers as $provider) {
+            $result = $provider->provide($uri, $signKey);
+            if (null !== $result) {
+                throw new RuntimeException('Object was not found');
+            }
+            if (false !== $result) {
+                return $result;
+            }
+        }
+
+        throw throw new RuntimeException('No resolver could resolve object');
     }
 
     /**

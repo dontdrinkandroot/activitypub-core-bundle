@@ -2,7 +2,7 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Container;
 
-class Route
+class RouteName
 {
     public const DDR_ACTIVITYPUB_PREFIX = 'ddr.activity_pub.';
     public const CORE_PREFIX = self::DDR_ACTIVITYPUB_PREFIX . 'core.';

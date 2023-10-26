@@ -4,15 +4,15 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Share\ShareServiceInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Share\InteractionServiceInterface;
 use RuntimeException;
 
-class ShareService implements ShareServiceInterface
+class InteractionService implements InteractionServiceInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function shared(Uri $remoteActorId, Uri $localObjectId): void
+    public function incoming(Uri $uri, Uri $remoteActorId): void
     {
         // TODO: Implement shared() method.
         throw new RuntimeException(__FUNCTION__ . ' not implemented');

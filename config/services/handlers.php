@@ -2,11 +2,11 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Config\Services;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\Tag;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowStorageInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\AcceptFollowInboxHandler;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\AnnounceInboxHandler;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\InteractionInboxHandler;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\FollowInboxHandler;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\RejectFollowInboxHandler;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\UndoFollowInboxHandler;
@@ -23,7 +23,7 @@ return function (ContainerConfigurator $configurator): void {
             service(LocalActorServiceInterface::class),
             service(FollowStorageInterface::class)
         ])
-        ->tag(Tag::INBOX_HANDLER);
+        ->tag(TagName::INBOX_HANDLER);
 
     $services->set(AcceptFollowInboxHandler::class)
         ->args([
@@ -31,7 +31,7 @@ return function (ContainerConfigurator $configurator): void {
             service(ObjectResolverInterface::class),
             service(LocalActorServiceInterface::class)
         ])
-        ->tag(Tag::INBOX_HANDLER);
+        ->tag(TagName::INBOX_HANDLER);
 
     $services->set(RejectFollowInboxHandler::class)
         ->args([
@@ -39,7 +39,7 @@ return function (ContainerConfigurator $configurator): void {
             service(ObjectResolverInterface::class),
             service(LocalActorServiceInterface::class)
         ])
-        ->tag(Tag::INBOX_HANDLER);
+        ->tag(TagName::INBOX_HANDLER);
 
     $services->set(UndoFollowInboxHandler::class)
         ->args([
@@ -47,10 +47,10 @@ return function (ContainerConfigurator $configurator): void {
             service(ObjectResolverInterface::class),
             service(LocalActorServiceInterface::class)
         ])
-        ->tag(Tag::INBOX_HANDLER);
+        ->tag(TagName::INBOX_HANDLER);
 
-    $services->set(AnnounceInboxHandler::class)
+    $services->set(InteractionInboxHandler::class)
         ->autowire()
         ->autoconfigure()
-        ->tag(Tag::INBOX_HANDLER);
+        ->tag(TagName::INBOX_HANDLER);
 };

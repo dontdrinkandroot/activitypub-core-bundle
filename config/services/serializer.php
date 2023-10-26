@@ -2,7 +2,7 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Config\Services;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\Tag;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ActivityStreamEncoder;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ActivityStreamNormalizer;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ContextNormalizer;
@@ -26,57 +26,57 @@ return function (ContainerConfigurator $configurator): void {
 
     $services
         ->set(ActivityStreamEncoder::class)
-        ->tag(Tag::SERIALIZER_ENCODER);
+        ->tag(TagName::SERIALIZER_ENCODER);
 
     $services
         ->set(ActivityStreamNormalizer::class)
         ->args([service(TypeClassRegistry::class)])
-        ->tag(Tag::SERIALIZER_NORMALIZER);
+        ->tag(TagName::SERIALIZER_NORMALIZER);
 
     $services
         ->set(DateTimeNormalizer::class)
-        ->tag(Tag::SERIALIZER_NORMALIZER);
+        ->tag(TagName::SERIALIZER_NORMALIZER);
 
     $services
         ->set(PublicKeyNormalizer::class)
-        ->tag(Tag::SERIALIZER_NORMALIZER);
+        ->tag(TagName::SERIALIZER_NORMALIZER);
 
     $services
         ->set(UriNormalizer::class)
-        ->tag(Tag::SERIALIZER_NORMALIZER);
+        ->tag(TagName::SERIALIZER_NORMALIZER);
 
     $services
         ->set(ScalarNormalizer::class)
-        ->tag(Tag::SERIALIZER_NORMALIZER);
+        ->tag(TagName::SERIALIZER_NORMALIZER);
 
     $services
         ->set(LinkCollectionNormalizer::class)
-        ->tag(Tag::SERIALIZER_NORMALIZER);
+        ->tag(TagName::SERIALIZER_NORMALIZER);
 
     $services
         ->set(LinkableNormalizer::class)
         ->args([service(TypeClassRegistry::class)])
-        ->tag(Tag::SERIALIZER_NORMALIZER);
+        ->tag(TagName::SERIALIZER_NORMALIZER);
 
     $services
         ->set(LinkableCollectionNormalizer::class)
-        ->tag(Tag::SERIALIZER_NORMALIZER);
+        ->tag(TagName::SERIALIZER_NORMALIZER);
 
     $services
         ->set(ContextNormalizer::class)
-        ->tag(Tag::SERIALIZER_NORMALIZER);
+        ->tag(TagName::SERIALIZER_NORMALIZER);
 
     $services
         ->set(SourceNormalizer::class)
-        ->tag(Tag::SERIALIZER_NORMALIZER);
+        ->tag(TagName::SERIALIZER_NORMALIZER);
 
     $services
         ->set(LinkNormalizer::class)
         ->args([service(TypeClassRegistry::class)])
-        ->tag(Tag::SERIALIZER_NORMALIZER);
+        ->tag(TagName::SERIALIZER_NORMALIZER);
 
     $services
         ->set(ObjectNormalizer::class)
         ->args([service(TypeClassRegistry::class)])
-        ->tag(Tag::SERIALIZER_NORMALIZER, ['priority' => -1]);
+        ->tag(TagName::SERIALIZER_NORMALIZER, ['priority' => -1]);
 };

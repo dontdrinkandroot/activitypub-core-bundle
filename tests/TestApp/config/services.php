@@ -10,13 +10,13 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowService;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowStorageInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\LocalObjectResolverInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Share\ShareServiceInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Share\InteractionServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\DeliveryService;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\FollowStorage;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\HttpClient\KernelBrowserHttpClient;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\LocalActorService;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\LocalObjectResolver;
-use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\ShareService;
+use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\InteractionService;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -39,7 +39,7 @@ return function (ContainerConfigurator $configurator): void {
     $services->alias(LocalActorServiceInterface::class, LocalActorService::class);
     $services->alias(FollowStorageInterface::class, FollowStorage::class)->public();
     $services->alias(DeliveryServiceInterface::class, DeliveryService::class);
-    $services->alias(ShareServiceInterface::class, ShareService::class)->public();
+    $services->alias(InteractionServiceInterface::class, InteractionService::class)->public();
     $services->alias(LocalObjectResolverInterface::class, LocalObjectResolver::class)->public();
     $services->alias(FollowServiceInterface::class, FollowService::class)->public();
 };

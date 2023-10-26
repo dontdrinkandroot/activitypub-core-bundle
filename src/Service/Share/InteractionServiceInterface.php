@@ -5,9 +5,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Share;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 
-interface ShareServiceInterface
+interface InteractionServiceInterface
 {
-    public function shared(Uri $remoteActorId, Uri $localObjectId): void;
-
-    public function share(Uri $localActorId, LinkableObject $remoteObject): void;
+    public function incoming(Uri $uri, string $type, Uri $remoteActorId, Uri $localObjectId): void;
 }

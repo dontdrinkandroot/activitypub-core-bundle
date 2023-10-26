@@ -11,7 +11,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox\GetAction as 
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox\PostAction as OutboxPostAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\SharedInboxAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\WebfingerAction;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\Route as RouteName;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\RouteName as RouteName;
 use RuntimeException;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
