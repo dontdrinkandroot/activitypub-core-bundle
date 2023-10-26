@@ -2,12 +2,12 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\Acceptance\Inbox;
 
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Direction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Client\ActivityPubClientInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowerStorageInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowingStorageInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowStorageInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\WebTestCase;
 use RuntimeException;
 
@@ -66,17 +66,19 @@ JSON;
 }
 JSON;
 
-        $followServiceMock = $this->createMock(FollowerStorageInterface::class);
-        $followServiceMock
+        $followStorageMock = $this->createMock(FollowStorageInterface::class);
+        $followStorageMock
             ->expects(self::once())
             ->method('add')
             ->with(
                 self::callback(fn($argument) => $argument instanceof LocalActorInterface
                     && $argument->getUsername() === 'service'),
                 self::callback(fn($argument) => $argument instanceof Uri
-                    && $argument->__toString() === 'https://localhost/@person')
+                    && $argument->__toString() === 'https://localhost/@person'),
+                self::callback(fn($argument) => $argument instanceof Direction
+                    && $argument === Direction::INCOMING)
             );
-        self::getContainer()->set(FollowerStorageInterface::class, $followServiceMock);
+        self::getContainer()->set(FollowStorageInterface::class, $followStorageMock);
 
         $activityPubClient->request(
             method: 'POST',
@@ -111,17 +113,19 @@ JSON;
 }
 JSON;
 
-        $followServiceMock = $this->createMock(FollowingStorageInterface::class);
-        $followServiceMock
+        $followStorageMock = $this->createMock(FollowStorageInterface::class);
+        $followStorageMock
             ->expects(self::once())
             ->method('accept')
             ->with(
                 self::callback(fn($argument) => $argument instanceof LocalActorInterface
                     && $argument->getUsername() === 'service'),
                 self::callback(fn($argument) => $argument instanceof Uri
-                    && $argument->__toString() === 'https://localhost/@person')
+                    && $argument->__toString() === 'https://localhost/@person'),
+                self::callback(fn($argument) => $argument instanceof Direction
+                    && $argument === Direction::OUTGOING)
             );
-        self::getContainer()->set(FollowingStorageInterface::class, $followServiceMock);
+        self::getContainer()->set(FollowStorageInterface::class, $followStorageMock);
 
         $activityPubClient->request(
             method: 'POST',
@@ -156,17 +160,19 @@ JSON;
 }
 JSON;
 
-        $followServiceMock = $this->createMock(FollowerStorageInterface::class);
-        $followServiceMock
+        $followStorageMock = $this->createMock(FollowStorageInterface::class);
+        $followStorageMock
             ->expects(self::once())
             ->method('remove')
             ->with(
                 self::callback(fn($argument) => $argument instanceof LocalActorInterface
                     && $argument->getUsername() === 'service'),
                 self::callback(fn($argument) => $argument instanceof Uri
-                    && $argument->__toString() === 'https://localhost/@person')
+                    && $argument->__toString() === 'https://localhost/@person'),
+                self::callback(fn($argument) => $argument instanceof Direction
+                    && $argument === Direction::INCOMING)
             );
-        self::getContainer()->set(FollowerStorageInterface::class, $followServiceMock);
+        self::getContainer()->set(FollowStorageInterface::class, $followStorageMock);
 
         $activityPubClient->request(
             method: 'POST',

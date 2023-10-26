@@ -2,8 +2,8 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Model;
 
-enum FollowState: int
+enum Direction: int
 {
-    case PENDING = 0;
-    case ACCEPTED = 1;
+    case INCOMING = 0;
+    case OUTGOING = 1;
 }

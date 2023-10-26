@@ -2,8 +2,8 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Config\Services;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\GetAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\FollowersAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\GetAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Inbox\GetAction as InboxGetAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Inbox\PostAction as InboxPostAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox\GetAction as OutboxGetAction;
@@ -22,10 +22,9 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorUriGeneratorI
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Client\ActivityPubClient;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Client\ActivityPubClientInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Delivery\DeliveryServiceInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowerStorageInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowingStorageInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowService;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowServiceInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowStorageInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\FetchingObjectResolver;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\KeyPairGenerator;
@@ -89,8 +88,7 @@ return function (ContainerConfigurator $configurator): void {
 
     $services->set(FollowService::class)
         ->args([
-            service(FollowingStorageInterface::class),
-            service(FollowerStorageInterface::class),
+            service(FollowStorageInterface::class),
             service(DeliveryServiceInterface::class),
             service(ActorResolverInterface::class),
             service(LocalActorUriGeneratorInterface::class)

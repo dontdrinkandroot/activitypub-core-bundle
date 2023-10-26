@@ -2,20 +2,21 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox;
 
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Direction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\AbstractActivity;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Follow;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Undo;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowerStorageInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowStorageInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class UndoFollowInboxHandler implements InboxHandlerInterface
 {
     public function __construct(
-        private readonly FollowerStorageInterface $followerStorage,
+        private readonly FollowStorageInterface $followerStorage,
         private readonly ObjectResolverInterface $objectResolver,
         private readonly LocalActorServiceInterface $localActorService,
     ) {
@@ -58,7 +59,7 @@ class UndoFollowInboxHandler implements InboxHandlerInterface
             return new Response(status: Response::HTTP_NOT_FOUND);
         }
 
-        $this->followerStorage->remove($localActor, $followActorId);
+        $this->followerStorage->remove($localActor, $followActorId, Direction::INCOMING);
 
         return new Response(status: Response::HTTP_ACCEPTED);
     }

@@ -2,6 +2,7 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow;
 
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Direction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowState;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Accept;
@@ -19,8 +20,7 @@ use RuntimeException;
 class FollowService implements FollowServiceInterface
 {
     public function __construct(
-        private readonly FollowingStorageInterface $followingStorage,
-        private readonly FollowerStorageInterface $followerStorage,
+        private readonly FollowStorageInterface $followStorage,
         private readonly DeliveryServiceInterface $deliveryService,
         private readonly ActorResolverInterface $actorService,
         private readonly LocalActorUriGeneratorInterface $localActorUriGenerator
@@ -32,7 +32,7 @@ class FollowService implements FollowServiceInterface
      */
     public function follow(LocalActorInterface $localActor, Uri $remoteActorId): void
     {
-        $this->followingStorage->add($localActor, $remoteActorId);
+        $this->followStorage->add($localActor, $remoteActorId, Direction::OUTGOING);
 
         $follow = new Follow();
         //TODO: Use Id
@@ -48,7 +48,7 @@ class FollowService implements FollowServiceInterface
      */
     public function unfollow(LocalActorInterface $localActor, Uri $remoteActorId): void
     {
-        $this->followingStorage->remove($localActor, $remoteActorId);
+        $this->followStorage->remove($localActor, $remoteActorId, Direction::OUTGOING);
 
         $undo = new Undo();
         //TODO: Use Id
@@ -69,7 +69,7 @@ class FollowService implements FollowServiceInterface
      */
     public function acceptFollower(LocalActorInterface $localActor, Uri $remoteActorId): void
     {
-        $this->followerStorage->accept($localActor, $remoteActorId);
+        $this->followStorage->accept($localActor, $remoteActorId, Direction::INCOMING);
 
         $accept = new Accept();
         //TODO: Use Id
@@ -90,7 +90,7 @@ class FollowService implements FollowServiceInterface
      */
     public function rejectFollower(LocalActorInterface $localActor, Uri $remoteActorId): void
     {
-        $this->followerStorage->reject($localActor, $remoteActorId);
+        $this->followStorage->reject($localActor, $remoteActorId, Direction::INCOMING);
 
         $reject = new Reject();
         //TODO: Use Id
@@ -109,22 +109,9 @@ class FollowService implements FollowServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function listFollowers(
-        LocalActorInterface $localActor,
-        FollowState $followState = FollowState::ACCEPTED,
-        int $page = 1,
-        int $itemsPerPage = 50
-    ): array {
-        $offset = ($page - 1) * $itemsPerPage;
-        return $this->followerStorage->list($localActor, $followState, $offset, $itemsPerPage);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function findFollowingState(LocalActorInterface $localActor, Uri $remoteActorId): ?FollowState
     {
-        return $this->followingStorage->findState($localActor, $remoteActorId);
+        return $this->followStorage->findState($localActor, $remoteActorId, Direction::OUTGOING);
     }
 
     /**
@@ -132,7 +119,20 @@ class FollowService implements FollowServiceInterface
      */
     public function findFollowerState(LocalActorInterface $localActor, Uri $remoteActorId): ?FollowState
     {
-        return $this->followerStorage->findState($localActor, $remoteActorId);
+        return $this->followStorage->findState($localActor, $remoteActorId, Direction::INCOMING);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function listFollowers(
+        LocalActorInterface $localActor,
+        FollowState $followState = FollowState::ACCEPTED,
+        int $page = 1,
+        int $itemsPerPage = 50
+    ): array {
+        $offset = ($page - 1) * $itemsPerPage;
+        return $this->followStorage->list($localActor, Direction::INCOMING, $followState, $offset, $itemsPerPage);
     }
 
     /**
@@ -141,9 +141,8 @@ class FollowService implements FollowServiceInterface
     public function getNumFollowers(
         LocalActorInterface $localActor,
         FollowState $followState = FollowState::ACCEPTED
-    ): int
-    {
-        return $this->followerStorage->count($localActor, $followState);
+    ): int {
+        return $this->followStorage->count($localActor, Direction::INCOMING, $followState);
     }
 
     /**
@@ -156,7 +155,7 @@ class FollowService implements FollowServiceInterface
         int $itemsPerPage = 50
     ): array {
         $offset = ($page - 1) * $itemsPerPage;
-        return $this->followingStorage->list($localActor, $followState, $offset, $itemsPerPage);
+        return $this->followStorage->list($localActor, Direction::OUTGOING, $followState, $offset, $itemsPerPage);
     }
 
     /**
@@ -166,7 +165,7 @@ class FollowService implements FollowServiceInterface
         LocalActorInterface $localActor,
         FollowState $followState = FollowState::ACCEPTED
     ): int {
-        return $this->followingStorage->count($localActor, $followState);
+        return $this->followStorage->count($localActor, Direction::OUTGOING, $followState);
     }
 
     private function getInbox(Uri $actorId): Uri

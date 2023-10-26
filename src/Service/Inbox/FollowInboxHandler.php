@@ -2,19 +2,21 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox;
 
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Direction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\AbstractActivity;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Follow;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowerStorageInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowStorageInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class FollowInboxHandler implements InboxHandlerInterface
 {
     public function __construct(
         private readonly LocalActorServiceInterface $localActorService,
-        private readonly FollowerStorageInterface $followerStorage
+        private readonly FollowStorageInterface $followStorage
     ) {
     }
 
@@ -43,7 +45,7 @@ class FollowInboxHandler implements InboxHandlerInterface
             return new Response(status: Response::HTTP_NOT_FOUND);
         }
 
-        $this->followerStorage->add($targetLocalActor, $remoteActorId);
+        $this->followStorage->add($targetLocalActor, $remoteActorId, Direction::INCOMING);
 
         return new Response(status: Response::HTTP_ACCEPTED);
     }

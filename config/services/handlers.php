@@ -4,8 +4,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Config\Services;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\Tag;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowerStorageInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowingStorageInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowStorageInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\AcceptFollowInboxHandler;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\AnnounceInboxHandler;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\FollowInboxHandler;
@@ -22,13 +21,13 @@ return function (ContainerConfigurator $configurator): void {
     $services->set(FollowInboxHandler::class)
         ->args([
             service(LocalActorServiceInterface::class),
-            service(FollowerStorageInterface::class)
+            service(FollowStorageInterface::class)
         ])
         ->tag(Tag::INBOX_HANDLER);
 
     $services->set(AcceptFollowInboxHandler::class)
         ->args([
-            service(FollowingStorageInterface::class),
+            service(FollowStorageInterface::class),
             service(ObjectResolverInterface::class),
             service(LocalActorServiceInterface::class)
         ])
@@ -36,7 +35,7 @@ return function (ContainerConfigurator $configurator): void {
 
     $services->set(RejectFollowInboxHandler::class)
         ->args([
-            service(FollowingStorageInterface::class),
+            service(FollowStorageInterface::class),
             service(ObjectResolverInterface::class),
             service(LocalActorServiceInterface::class)
         ])
@@ -44,7 +43,7 @@ return function (ContainerConfigurator $configurator): void {
 
     $services->set(UndoFollowInboxHandler::class)
         ->args([
-            service(FollowerStorageInterface::class),
+            service(FollowStorageInterface::class),
             service(ObjectResolverInterface::class),
             service(LocalActorServiceInterface::class)
         ])
