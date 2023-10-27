@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Header;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\SignKey;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ActivityStreamEncoder;
@@ -38,7 +39,7 @@ class ActivityPubClient implements ActivityPubClientInterface
         Uri $uri,
         CoreType|string|null $content = null,
         ?SignKey $signKey = null
-    ): ?CoreType {
+    ): ?CoreObject {
         $host = Asserted::notNull($uri->getAuthority());
         $path = Asserted::notNull($uri->getPathWithQueryAndFragment());
 
@@ -59,7 +60,10 @@ class ActivityPubClient implements ActivityPubClientInterface
                 return null;
             }
 
-            return $this->serializer->deserialize($content, CoreType::class, ActivityStreamEncoder::FORMAT);
+            return Asserted::instanceOf(
+                $this->serializer->deserialize($content, CoreType::class, ActivityStreamEncoder::FORMAT),
+                CoreObject::class
+            );
         } catch (ClientExceptionInterface|ServerExceptionInterface $e) {
             $content = $this->formatJsonContent($response);
             throw new RuntimeException($content, $response->getStatusCode(), $e);

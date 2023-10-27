@@ -3,6 +3,7 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Client;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\SignKey;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 
@@ -16,5 +17,5 @@ interface ActivityPubClientInterface
         Uri $uri,
         CoreType|string|null $content = null,
         SignKey $signKey = null
-    ): ?CoreType;
+    ): ?CoreObject;
 }

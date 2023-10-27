@@ -3,6 +3,7 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Object;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\SignKey;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Client\ActivityPubClientInterface;
@@ -17,7 +18,7 @@ class FetchingObjectProvider implements ObjectProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function provide(Uri $uri, ?SignKey $signKey): CoreType|false|null
+    public function provide(Uri $uri, ?SignKey $signKey): CoreObject|false|null
     {
         return $this->client->request(method: 'GET', uri: $uri, signKey: $signKey);
     }
