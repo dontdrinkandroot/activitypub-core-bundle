@@ -176,4 +176,22 @@ PEM
 
         return $actor;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function provide(Uri $uri, ?SignKey $signKey): Actor|false|null
+    {
+        $username = $this->localActorUriGenerator->matchUsername($uri);
+        if (null === $username) {
+            return false;
+        }
+
+        $localActor = $this->findLocalActorByUsername($username);
+        if (null === $localActor) {
+            return null;
+        }
+
+        return $this->toActivityPubActor($localActor);
+    }
 }
