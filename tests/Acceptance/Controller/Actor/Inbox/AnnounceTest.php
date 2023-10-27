@@ -1,19 +1,21 @@
 <?php
 
-namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\Acceptance\Inbox;
+namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\Acceptance\Controller\Actor\Inbox;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Object\Note;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObjectsCollection;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Client\ActivityPubClientInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Share\InteractionServiceInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\Object\MockObjectProvider;
+use Dontdrinkandroot\ActivityPubCoreBundle\Tests\UriMatcherTrait;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\WebTestCase;
 
 class AnnounceTest extends WebTestCase
 {
+    use UriMatcherTrait;
+
     public function testAnnounce(): void
     {
         self::bootKernel();
@@ -40,29 +42,23 @@ JSON;
             Uri::fromString('https://localhost/@person')
         );
 
-        $objectResolverMock = $this->createMock(ObjectResolverInterface::class);
-        $objectResolverMock
+        $mockObjectProvider = $this->createMock(MockObjectProvider::class);
+        $mockObjectProvider
             ->expects(self::once())
-            ->method('resolve')
-            ->with(
-                self::callback(
-                    fn($argument) => $argument instanceof LinkableObject && $argument->getId()->equals(
-                            Uri::fromString('https://localhost/@person/note/1')
-                        )
-                )
-            )
+            ->method('provide')
+            ->with(self::uriMatcher('https://localhost/@person/note/1'))
             ->willReturn($note);
-        self::getContainer()->set(ObjectResolverInterface::class, $objectResolverMock);
+        self::getContainer()->set(MockObjectProvider::class, $mockObjectProvider);
 
         $shareServiceMock = $this->createMock(InteractionServiceInterface::class);
         $shareServiceMock
             ->expects(self::once())
             ->method('incoming')
             ->with(
-                $this->uriMatcher('http://localhost/@service/activities/1'),
+                self::uriMatcher('http://localhost/@service/activities/1'),
                 'Announce',
-                $this->uriMatcher('https://localhost/@service'),
-                $this->uriMatcher('https://localhost/@person/note/1'),
+                self::uriMatcher('https://localhost/@service'),
+                self::uriMatcher('https://localhost/@person/note/1'),
             );
         self::getContainer()->set(InteractionServiceInterface::class, $shareServiceMock);
 

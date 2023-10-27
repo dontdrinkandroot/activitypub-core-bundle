@@ -3,6 +3,7 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\HttpClient;
 
 use Dontdrinkandroot\Common\Asserted;
+use Exception;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,7 @@ class KernelBrowserHttpClient implements HttpClientInterface
 {
     public function __construct(private readonly KernelBrowser $kernelBrowser)
     {
+        $this->kernelBrowser->catchExceptions(false);
     }
 
     /**
@@ -21,14 +23,28 @@ class KernelBrowserHttpClient implements HttpClientInterface
      */
     public function request(string $method, string $url, array $options = []): ResponseInterface
     {
-        $this->kernelBrowser->request(
-            $method,
-            $url,
-            [],
-            [],
-            $this->transformRequestHeaders($options['headers']),
-            $options['body'] ?? null
-        );
+        try {
+            $this->kernelBrowser->request(
+                $method,
+                $url,
+                [],
+                [],
+                $this->transformRequestHeaders($options['headers']),
+                $options['body'] ?? null
+            );
+        } catch (Exception $e) {
+            return new KernelBrowserResponse(
+                url: $url,
+                statusCode: 500,
+                headers: [],
+                content: json_encode([
+                    'error' => [
+                        'message' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
+                    ],
+                ])
+            );
+        }
 
         $response = $this->kernelBrowser->getResponse();
         return new KernelBrowserResponse(

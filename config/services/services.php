@@ -15,10 +15,10 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\ParamName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Routing\RoutingLoader;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\TypeClassRegistry;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\ActorResolverInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\FetchingActorResolver;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorUriGenerator;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorUriGeneratorInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\ObjectResolverPublicKeyResolver;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\PublicKeyResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Client\ActivityPubClient;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Client\ActivityPubClientInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Delivery\DeliveryServiceInterface;
@@ -49,59 +49,44 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_it
 return function (ContainerConfigurator $configurator): void {
     $services = $configurator->services();
 
-    $services
-        ->set(RoutingLoader::class)
+    $services->set(RoutingLoader::class)
         ->args([param(ParamName::ACTOR_PATH_PREFIX)])
         ->tag(TagName::ROUTING_LOADER);
 
-    $services
-        ->set(TypeClassRegistry::class);
+    $services->set(TypeClassRegistry::class);
 
-    $services
-        ->set(SignatureGenerator::class);
+    $services->set(SignatureGenerator::class);
+    $services->alias(SignatureGeneratorInterface::class, SignatureGenerator::class);
 
-    $services
-        ->alias(SignatureGeneratorInterface::class, SignatureGenerator::class);
+    $services->set(ObjectResolverPublicKeyResolver::class)
+        ->args([
+            service(ObjectResolverInterface::class)
+        ]);
+    $services->alias(PublicKeyResolverInterface::class, ObjectResolverPublicKeyResolver::class);
 
-    $services
-        ->set(SignatureVerifier::class)#
-        ->args([service(ActorResolverInterface::class)]);
+    $services->set(SignatureVerifier::class)#
+    ->args([service(PublicKeyResolverInterface::class)]);
+    $services->alias(SignatureVerifierInterface::class, SignatureVerifier::class);
 
-    $services
-        ->alias(SignatureVerifierInterface::class, SignatureVerifier::class);
-
-    $services
-        ->set(ActivityPubClient::class)
+    $services->set(ActivityPubClient::class)
         ->args([
             service(SerializerInterface::class),
             service(SignatureGeneratorInterface::class),
             service(HttpClientInterface::class)
         ]);
+    $services->alias(ActivityPubClientInterface::class, ActivityPubClient::class);
 
-    $services
-        ->alias(ActivityPubClientInterface::class, ActivityPubClient::class);
-
-    $services
-        ->set(KeyPairGenerator::class);
-
-    $services
-        ->alias(KeyPairGeneratorInterface::class, KeyPairGenerator::class);
+    $services->set(KeyPairGenerator::class);
+    $services->alias(KeyPairGeneratorInterface::class, KeyPairGenerator::class);
 
     $services->set(FollowService::class)
         ->args([
             service(FollowStorageInterface::class),
             service(DeliveryServiceInterface::class),
-            service(ActorResolverInterface::class),
+            service(ObjectResolverInterface::class),
             service(LocalActorUriGeneratorInterface::class)
         ]);
-
     $services->alias(FollowServiceInterface::class, FollowService::class);
-
-    $services->set(FetchingActorResolver::class)
-        ->args([
-            service(ActivityPubClientInterface::class),
-        ]);
-    $services->alias(ActorResolverInterface::class, FetchingActorResolver::class);
 
     $services->set(LocalActorUriGenerator::class)
         ->args([

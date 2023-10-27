@@ -9,12 +9,13 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Accept;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Follow;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Reject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Undo;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Actor;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObjectsCollection;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\ActorResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorUriGeneratorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Delivery\DeliveryServiceInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use RuntimeException;
 
 class FollowService implements FollowServiceInterface
@@ -22,7 +23,7 @@ class FollowService implements FollowServiceInterface
     public function __construct(
         private readonly FollowStorageInterface $followStorage,
         private readonly DeliveryServiceInterface $deliveryService,
-        private readonly ActorResolverInterface $actorService,
+        private readonly ObjectResolverInterface $objectResolver,
         private readonly LocalActorUriGeneratorInterface $localActorUriGenerator
     ) {
     }
@@ -170,7 +171,7 @@ class FollowService implements FollowServiceInterface
 
     private function getInbox(Uri $actorId): Uri
     {
-        return $this->actorService->resolveInbox($actorId)
+        return $this->objectResolver->resolveTyped($actorId, Actor::class)?->inbox
             ?? throw new RuntimeException('Inbox not found');
     }
 }

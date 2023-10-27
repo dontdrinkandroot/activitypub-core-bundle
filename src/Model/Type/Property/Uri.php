@@ -109,7 +109,7 @@ class Uri implements Stringable
         return $uri;
     }
 
-    public function withFragment(string $string): Uri
+    public function withFragment(?string $fragment): Uri
     {
         return new Uri(
             scheme: $this->scheme,
@@ -119,7 +119,7 @@ class Uri implements Stringable
             pass: $this->pass,
             query: $this->query,
             path: $this->path,
-            fragment: $string
+            fragment: $fragment
         );
     }
 

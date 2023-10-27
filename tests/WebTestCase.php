@@ -2,8 +2,6 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
-use PHPUnit\Framework\Constraint\Callback;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as BaseWebTestCase;
 
 class WebTestCase extends BaseWebTestCase
@@ -21,10 +19,5 @@ class WebTestCase extends BaseWebTestCase
         $service = self::getContainer()->get($id);
         self::assertInstanceOf($class, $service);
         return $service;
-    }
-
-    protected function uriMatcher(string $value): Callback
-    {
-        return self::callback(static fn(mixed $arg): bool => Uri::fromString($value)->equals($arg));
     }
 }

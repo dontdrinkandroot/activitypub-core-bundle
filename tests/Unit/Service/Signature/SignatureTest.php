@@ -5,19 +5,21 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\Unit\Service\Signature;
 use DateTime;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Header;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\SignKey;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Person;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\PublicKey;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\ActorResolverInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\PublicKeyResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\KeyPairGenerator;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureGenerator;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureTools;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureVerifier;
+use Dontdrinkandroot\ActivityPubCoreBundle\Tests\UriMatcherTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 class SignatureTest extends TestCase
 {
+    use UriMatcherTrait;
+
     public function testCreateSignedRequestHeadersAndVerify(): void
     {
         $keyPair = (new KeyPairGenerator())->generateKeyPair();
@@ -62,9 +64,20 @@ JSON;
         $this->assertArrayHasKey('Digest', $headers);
         $this->assertArrayHasKey('Content-Type', $headers);
 
-        $actorService = $this->createMock(ActorResolverInterface::class);
-        $actorService->method('resolvePublicKey')->willReturn($signKey->publicKeyPem);
-        $signatureVerifier = new SignatureVerifier($actorService);
+        $publicKeyResolver = $this->createMock(PublicKeyResolverInterface::class);
+        $publicKeyResolver
+            ->expects($this->once())
+            ->method('resolve')
+            ->with(self::uriMatcher('https://mastodon.localdomain/users/test#main-key'))
+            ->willReturn(
+                new PublicKey(
+                    id: $signActorId->withFragment('main-key'),
+                    owner: $signActorId,
+                    publicKeyPem: $keyPair->publicKey
+                )
+            );
+
+        $signatureVerifier = new SignatureVerifier($publicKeyResolver);
 
         $request = Request::create(
             uri: 'https://mastodon.localdomain/users/test/inbox',

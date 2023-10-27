@@ -5,7 +5,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature;
 use DateTime;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Header;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\ActorResolverInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\PublicKeyResolverInterface;
 use Dontdrinkandroot\Common\Asserted;
 use Exception;
 use phpseclib3\Crypt\RSA;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SignatureVerifier implements SignatureVerifierInterface
 {
-    public function __construct(private readonly ActorResolverInterface $actorService)
+    public function __construct(private readonly PublicKeyResolverInterface $publicKeyResolver)
     {
     }
 
@@ -29,10 +29,7 @@ class SignatureVerifier implements SignatureVerifierInterface
         $this->verifyDigestMatching($request);
 
         $signatureParts = $this->parseSignatureHeader($signatureHeader);
-        $signActorId = $this->getActorIriFromKeyId($signatureParts['keyId']);
-        if (null === ($signActorPublicKeyPem = $this->actorService->resolvePublicKey($signActorId))) {
-            throw new Exception('Actor has no public key: ' . $signActorId);
-        }
+        $actorPublicKey = $this->publicKeyResolver->resolve(Uri::fromString($signatureParts['keyId']));
 
         // TODO: Make sure all required headers are present
         $signHeaderNames = explode(' ', $signatureParts['headers']);
@@ -49,7 +46,7 @@ class SignatureVerifier implements SignatureVerifierInterface
 
         // TODO: Check algorithm
 
-        $publicKey = Asserted::instanceOf(RSA::loadPublicKey($signActorPublicKeyPem), RSA\PublicKey::class);
+        $publicKey = Asserted::instanceOf(RSA::loadPublicKey($actorPublicKey->publicKeyPem), RSA\PublicKey::class);
         $publicKey = $publicKey->withPadding(RSA::SIGNATURE_PKCS1);
 
         $verificationResult = $publicKey->verify($signatureString, $signature);
@@ -57,7 +54,7 @@ class SignatureVerifier implements SignatureVerifierInterface
             throw new Exception('Signature Verification Failed');
         }
 
-        return $signActorId;
+        return $actorPublicKey->owner;
     }
 
     private function parseSignatureHeader(string $signatureHeader): array
@@ -75,16 +72,6 @@ class SignatureVerifier implements SignatureVerifierInterface
         }
 
         return $signatureParts;
-    }
-
-    private function getActorIriFromKeyId(string $keyId): Uri
-    {
-        $keyIdParts = explode('#', $keyId);
-        if (2 !== count($keyIdParts)) {
-            throw new Exception('Invalid KeyId: ' . $keyId);
-        }
-
-        return Uri::fromString($keyIdParts[0]);
     }
 
     private function getRequestHeaders(Request $request): array

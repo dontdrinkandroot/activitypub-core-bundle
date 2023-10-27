@@ -1,6 +1,6 @@
 <?php
 
-namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\Acceptance\Inbox;
+namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\Acceptance\Controller\Actor\Inbox;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Direction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;

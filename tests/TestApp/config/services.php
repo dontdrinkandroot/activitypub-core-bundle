@@ -2,6 +2,7 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Config;
 
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Delivery\DeliveryServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowService;
@@ -15,6 +16,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\FollowStorage;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\HttpClient\KernelBrowserHttpClient;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\InteractionService;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\LocalActorService;
+use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\Object\MockObjectProvider;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -33,6 +35,9 @@ return function (ContainerConfigurator $configurator): void {
         ]);
 
     $services->alias(HttpClientInterface::class, KernelBrowserHttpClient::class);
+    $services->set(MockObjectProvider::class)
+        ->tag(TagName::OBJECT_PROVIDER)
+        ->public();
 
     $services->alias(LocalActorServiceInterface::class, LocalActorService::class);
     $services->alias(FollowStorageInterface::class, FollowStorage::class)->public();
