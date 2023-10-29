@@ -18,7 +18,6 @@ class ScalarNormalizer implements NormalizerInterface, DenormalizerInterface
                 || $type === 'int'
                 || $type === 'float'
                 || $type === 'bool'
-                || $type === 'array'
             )
             && is_scalar($data);
     }
@@ -33,7 +32,6 @@ class ScalarNormalizer implements NormalizerInterface, DenormalizerInterface
             'int' => (int)$data,
             'float' => (float)$data,
             'bool' => (bool)$data,
-            'array' => (array)$data,
             default => throw new RuntimeException('Unsupported type: ' . $type)
         };
     }

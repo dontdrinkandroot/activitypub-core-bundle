@@ -7,6 +7,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ActivityStreamEncoder;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ActivityStreamNormalizer;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ContextNormalizer;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\DateTimeNormalizer;
+use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\EndpointsNormalizer;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\LinkableCollectionNormalizer;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\LinkableNormalizer;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\LinkCollectionNormalizer;
@@ -31,6 +32,10 @@ return function (ContainerConfigurator $configurator): void {
     $services
         ->set(ActivityStreamNormalizer::class)
         ->args([service(TypeClassRegistry::class)])
+        ->tag(TagName::SERIALIZER_NORMALIZER);
+
+    $services
+        ->set(EndpointsNormalizer::class)
         ->tag(TagName::SERIALIZER_NORMALIZER);
 
     $services

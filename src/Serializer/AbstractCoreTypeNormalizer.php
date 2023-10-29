@@ -13,14 +13,14 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
 
-abstract class AbstractCoreTypeNormalizer implements SerializerAwareInterface, DenormalizerInterface,
-                                                     NormalizerInterface
+abstract class AbstractCoreTypeNormalizer
+    implements SerializerAwareInterface, DenormalizerInterface, NormalizerInterface
 {
+    use SerializerAwareTrait;
+
     public function __construct(protected readonly TypeClassRegistry $typeClassRegistry)
     {
     }
-
-    use SerializerAwareTrait;
 
     /**
      * {@inheritdoc}
