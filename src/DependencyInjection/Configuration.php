@@ -30,6 +30,15 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('/@')
                     ->cannotBeEmpty()
             )
+            ->append(
+                (new ScalarNodeDefinition('follow_response_mode'))
+                    ->defaultValue('accept')
+                    ->cannotBeEmpty()
+                    ->validate()
+                    ->ifNotInArray(['accept', 'reject', 'manual'])
+                    ->thenInvalid('Invalid follow response mode "%s"')
+                    ->end()
+            )
             ->end();
 
         return $treeBuilder;

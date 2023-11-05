@@ -3,6 +3,8 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Direction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowResponseMode;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowResponseType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowState;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Accept;
@@ -24,7 +26,8 @@ class FollowService implements FollowServiceInterface
         private readonly FollowStorageInterface $followStorage,
         private readonly DeliveryServiceInterface $deliveryService,
         private readonly ObjectResolverInterface $objectResolver,
-        private readonly LocalActorUriGeneratorInterface $localActorUriGenerator
+        private readonly LocalActorUriGeneratorInterface $localActorUriGenerator,
+        private FollowResponseMode $followResponseMode
     ) {
     }
 
@@ -169,9 +172,50 @@ class FollowService implements FollowServiceInterface
         return $this->followStorage->count($localActor, Direction::OUTGOING, $followState);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function onFollowerRequest(LocalActorInterface $localActor, Uri $remoteActorId): void
+    {
+        $this->followStorage->add($localActor, $remoteActorId, Direction::INCOMING);
+
+        match ($this->followResponseMode) {
+            FollowResponseMode::ACCEPT => $this->acceptFollower($localActor, $remoteActorId),
+            FollowResponseMode::REJECT => $this->rejectFollower($localActor, $remoteActorId),
+            FollowResponseMode::MANUAL => null,
+        };
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onFollowingResponse(
+        LocalActorInterface $localActor,
+        Uri $remoteActorId,
+        FollowResponseType $responseType
+    ): void {
+        match ($responseType) {
+            FollowResponseType::ACCEPTED => $this->followStorage->accept(
+                $localActor,
+                $remoteActorId,
+                Direction::OUTGOING
+            ),
+            FollowResponseType::REJECTED => $this->followStorage->reject(
+                $localActor,
+                $remoteActorId,
+                Direction::OUTGOING
+            ),
+        };
+    }
+
     private function getInbox(Uri $actorId): Uri
     {
         return $this->objectResolver->resolveTyped($actorId, Actor::class)?->inbox
             ?? throw new RuntimeException('Inbox not found');
+    }
+
+    public function setFollowResponseMode(FollowResponseMode $followResponseMode): void
+    {
+        $this->followResponseMode = $followResponseMode;
     }
 }

@@ -2,21 +2,21 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Direction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowResponseType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\AbstractActivity;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Follow;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Reject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowStorageInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class RejectFollowInboxHandler implements InboxHandlerInterface
 {
     public function __construct(
-        private readonly FollowStorageInterface $followStorage,
+        private readonly FollowServiceInterface $followService,
         private readonly ObjectResolverInterface $objectResolver,
         private readonly LocalActorServiceInterface $localActorService
     ) {
@@ -56,7 +56,7 @@ class RejectFollowInboxHandler implements InboxHandlerInterface
             return new Response(status: Response::HTTP_NOT_FOUND);
         }
 
-        $this->followStorage->reject($localActor, $followObjectId, Direction::OUTGOING);
+        $this->followService->onFollowingResponse($localActor, $followObjectId, FollowResponseType::REJECTED);
 
         return new Response(status: Response::HTTP_ACCEPTED);
     }

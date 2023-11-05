@@ -2,6 +2,7 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow;
 
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowResponseType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowState;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
@@ -49,4 +50,12 @@ interface FollowServiceInterface
         LocalActorInterface $localActor,
         FollowState $followState = FollowState::ACCEPTED
     ): int;
+
+    public function onFollowerRequest(LocalActorInterface $localActor, Uri $remoteActorId): void;
+
+    public function onFollowingResponse(
+        LocalActorInterface $localActor,
+        Uri $remoteActorId,
+        FollowResponseType $responseType
+    ): void;
 }

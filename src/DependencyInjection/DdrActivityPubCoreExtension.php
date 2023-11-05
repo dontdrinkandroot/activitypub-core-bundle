@@ -4,6 +4,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\DependencyInjection;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\ParamName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\TagName;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowResponseMode;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\InboxHandlerInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectProviderInterface;
 use Symfony\Component\Config\FileLocator;
@@ -33,6 +34,10 @@ class DdrActivityPubCoreExtension extends Extension implements PrependExtensionI
 
         $container->setParameter(ParamName::HOST, $config['host']);
         $container->setParameter(ParamName::ACTOR_PATH_PREFIX, $config['actor_path_prefix']);
+        $container->setParameter(
+            ParamName::FOLLOW_RESPONSE_MODE,
+            FollowResponseMode::from($config['follow_response_mode'])
+        );
 
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../config/services'));
         $loader->load('services.php');

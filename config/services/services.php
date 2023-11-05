@@ -84,7 +84,8 @@ return function (ContainerConfigurator $configurator): void {
             service(FollowStorageInterface::class),
             service(DeliveryServiceInterface::class),
             service(ObjectResolverInterface::class),
-            service(LocalActorUriGeneratorInterface::class)
+            service(LocalActorUriGeneratorInterface::class),
+            param(ParamName::FOLLOW_RESPONSE_MODE)
         ]);
     $services->alias(FollowServiceInterface::class, FollowService::class);
 
