@@ -155,7 +155,8 @@ return function (ContainerConfigurator $configurator): void {
         ->arg('$handlers', tagged_iterator(TagName::INBOX_HANDLER))
         ->autowire()
         ->autoconfigure()
-        ->tag(TagName::CONTROLLER);
+        ->tag(TagName::CONTROLLER)
+        ->tag('mono_logger.logger', ['channel' => 'activitypub']);
 
     $services
         ->set(OutboxGetAction::class)
