@@ -40,25 +40,35 @@ class InteractionInboxHandler implements InboxHandlerInterface
         }
 
         if (!$activityActorId->equals($signActorId)) {
-            return new Response(status: Response::HTTP_FORBIDDEN);
+            return new Response(status: Response::HTTP_FORBIDDEN, headers: [
+                'Content-Type' => 'application/activity+json'
+            ]);
         }
 
         $resolvedObject = $this->objectResolver->resolve($object);
         if (null === $resolvedObject) {
-            return new Response(status: Response::HTTP_NOT_FOUND);
+            return new Response(status: Response::HTTP_NOT_FOUND, headers: [
+                'Content-Type' => 'application/activity+json'
+            ]);
         }
         if (!$resolvedObject instanceof CoreObject) {
-            return new Response(status: Response::HTTP_BAD_REQUEST);
+            return new Response(status: Response::HTTP_BAD_REQUEST, headers: [
+                'Content-Type' => 'application/activity+json'
+            ]);
         }
 
         $attributedTo = $resolvedObject->attributedTo;
         if (null === $attributedTo || null === ($attributedToId = $attributedTo->getSingleValueId())) {
-            return new Response(status: Response::HTTP_BAD_REQUEST);
+            return new Response(status: Response::HTTP_BAD_REQUEST, headers: [
+                'Content-Type' => 'application/activity+json'
+            ]);
         }
 
         $localActor = $this->localActorService->findLocalActorByUri($attributedToId);
         if (null === $this->localActorService->findLocalActorByUri($attributedToId)) {
-            return new Response(status: Response::HTTP_BAD_REQUEST);
+            return new Response(status: Response::HTTP_BAD_REQUEST, headers: [
+                'Content-Type' => 'application/activity+json'
+            ]);
         }
 
         if (null !== $localActor) {
@@ -72,6 +82,8 @@ class InteractionInboxHandler implements InboxHandlerInterface
             // TODO: This is just a notification
         }
 
-        return new Response(status: Response::HTTP_ACCEPTED);
+        return new Response(status: Response::HTTP_ACCEPTED, headers: [
+            'Content-Type' => 'application/activity+json'
+        ]);
     }
 }

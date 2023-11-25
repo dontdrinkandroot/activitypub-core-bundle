@@ -39,7 +39,9 @@ class UndoFollowInboxHandler implements InboxHandlerInterface
         }
 
         if (!$undoActorId->equals($signActorId)) {
-            return new Response(status: Response::HTTP_FORBIDDEN);
+            return new Response(status: Response::HTTP_FORBIDDEN, headers: [
+                'Content-Type' => 'application/activity+json'
+            ]);
         }
 
         $follow = $this->objectResolver->resolve($activity->object);
@@ -52,15 +54,21 @@ class UndoFollowInboxHandler implements InboxHandlerInterface
         }
 
         if (!$followActorId->equals($signActorId)) {
-            return new Response(status: Response::HTTP_FORBIDDEN);
+            return new Response(status: Response::HTTP_FORBIDDEN, headers: [
+                'Content-Type' => 'application/activity+json'
+            ]);
         }
 
         if (null === ($localActor = $this->localActorService->findLocalActorByUri($followObjectId))) {
-            return new Response(status: Response::HTTP_NOT_FOUND);
+            return new Response(status: Response::HTTP_NOT_FOUND, headers: [
+                'Content-Type' => 'application/activity+json'
+            ]);
         }
 
         $this->followerStorage->remove($localActor, $followActorId, Direction::INCOMING);
 
-        return new Response(status: Response::HTTP_ACCEPTED);
+        return new Response(status: Response::HTTP_ACCEPTED, headers: [
+            'Content-Type' => 'application/activity+json'
+        ]);
     }
 }

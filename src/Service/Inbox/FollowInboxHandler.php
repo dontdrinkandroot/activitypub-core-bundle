@@ -36,15 +36,21 @@ class FollowInboxHandler implements InboxHandlerInterface
         }
 
         if (!$signActorId->equals($remoteActorId)) {
-            return new Response(status: Response::HTTP_FORBIDDEN);
+            return new Response(status: Response::HTTP_FORBIDDEN, headers: [
+                'Content-Type' => 'application/activity+json'
+            ]);
         }
 
         if (null === ($targetLocalActor = $this->localActorService->findLocalActorByUri($targetObject->getId()))) {
-            return new Response(status: Response::HTTP_NOT_FOUND);
+            return new Response(status: Response::HTTP_NOT_FOUND, headers: [
+                'Content-Type' => 'application/activity+json'
+            ]);
         }
 
         $this->followService->onFollowerRequest($targetLocalActor, $remoteActorId);
 
-        return new Response(status: Response::HTTP_ACCEPTED);
+        return new Response(status: Response::HTTP_ACCEPTED, headers: [
+            'Content-Type' => 'application/activity+json'
+        ]);
     }
 }
