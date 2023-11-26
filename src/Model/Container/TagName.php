@@ -11,4 +11,5 @@ class TagName
     public const SERIALIZER_NORMALIZER = 'serializer.normalizer';
     public const KERNEL_EVENT_LISTENER = 'kernel.event_listener';
     public const OBJECT_PROVIDER = 'ddr.activity_pub_core.object_provider';
+    public const MONOLOG_LOGGER = 'monolog.logger';
 }

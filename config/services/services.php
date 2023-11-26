@@ -36,6 +36,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureVerifier;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureVerifierInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\WebFinger\CachedWebFingerService;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\WebFinger\WebFingerServiceInterface;
+use Dontdrinkandroot\BridgeBundle\Model\Container\Tag;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
@@ -156,7 +157,7 @@ return function (ContainerConfigurator $configurator): void {
         ->autowire()
         ->autoconfigure()
         ->tag(TagName::CONTROLLER)
-        ->tag('mono_logger.logger', ['channel' => 'activitypub']);
+        ->tag(TagName::MONOLOG_LOGGER, ['channel' => 'activitypub']);
 
     $services
         ->set(OutboxGetAction::class)
