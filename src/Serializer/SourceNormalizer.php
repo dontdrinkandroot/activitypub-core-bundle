@@ -46,4 +46,14 @@ class SourceNormalizer implements NormalizerInterface, DenormalizerInterface
             'mediaType' => $object->mediaType
         ];
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Source::class => true
+        ];
+    }
 }

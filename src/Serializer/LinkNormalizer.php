@@ -53,4 +53,14 @@ class LinkNormalizer extends AbstractCoreTypeNormalizer
 
         return parent::normalizeCoreType($coreType);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Link::class => true
+        ];
+    }
 }

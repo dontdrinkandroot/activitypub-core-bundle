@@ -103,12 +103,11 @@ class ActivityPubClient implements ActivityPubClientInterface
     {
         $content = $response->getContent(false);
         try {
-            return Asserted::string(
+            return
                 json_encode(
                     json_decode($content, false, 512, JSON_THROW_ON_ERROR),
                     JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
-                )
-            );
+                );
         } catch (JsonException $e) {
             return $content;
         }

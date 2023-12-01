@@ -94,7 +94,7 @@ class KernelBrowserHttpClient implements HttpClientInterface
     {
         $headers = [];
         foreach ($response->headers->all() as $name => $values) {
-            $headers[is_string($name) ? strtolower($name) : $name] = $values;
+            $headers[strtolower($name)] = $values;
         }
 
         return $headers;

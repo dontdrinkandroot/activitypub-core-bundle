@@ -67,4 +67,14 @@ class LinkableNormalizer implements SerializerAwareInterface, NormalizerInterfac
 
         return Asserted::array($this->getSerializer()->normalize($object->object, $format));
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            AbstractLinkable::class => true
+        ];
+    }
 }

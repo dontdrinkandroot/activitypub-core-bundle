@@ -39,4 +39,14 @@ class ActivityStreamNormalizer implements SerializerAwareInterface, Denormalizer
         $class = $this->typeClassRegistry->getClass($data->type);
         return $this->getSerializer()->denormalize($data, $class, $format, $context);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            CoreType::class => true
+        ];
+    }
 }

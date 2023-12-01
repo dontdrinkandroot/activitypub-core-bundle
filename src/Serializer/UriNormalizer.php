@@ -6,9 +6,6 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-/**
- * @method  getSupportedTypes(?string $format)
- */
 class UriNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     /**
@@ -45,5 +42,15 @@ class UriNormalizer implements NormalizerInterface, DenormalizerInterface
     {
         assert($object instanceof Uri);
         return $object->__toString();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Uri::class => true
+        ];
     }
 }

@@ -114,7 +114,7 @@ class SignatureVerifier implements SignatureVerifierInterface
 
     public function verifyDigestMatching(Request $request): void
     {
-        $body = Asserted::string($request->getContent());
+        $body = $request->getContent();
         $digestHeader = $request->headers->get(Header::DIGEST);
         if (!empty($body) && null === $digestHeader) {
             throw new Exception('Missing Digest Header');

@@ -13,7 +13,7 @@ class PublicKeyNormalizer implements NormalizerInterface, DenormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsDenormalization(mixed $data, string $type, string $format = null): bool
+    public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
         return $type === PublicKey::class && $format === ActivityStreamEncoder::FORMAT;
     }
@@ -37,7 +37,7 @@ class PublicKeyNormalizer implements NormalizerInterface, DenormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsNormalization(mixed $data, string $format = null): bool
+    public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return $data instanceof PublicKey && $format === ActivityStreamEncoder::FORMAT;
     }
@@ -53,6 +53,16 @@ class PublicKeyNormalizer implements NormalizerInterface, DenormalizerInterface
             'id' => (string)$object->id,
             'owner' => (string)$object->owner,
             'publicKeyPem' => $object->publicKeyPem
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            PublicKey::class => true
         ];
     }
 }

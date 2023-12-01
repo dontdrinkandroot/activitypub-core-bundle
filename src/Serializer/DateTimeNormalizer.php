@@ -53,4 +53,14 @@ class DateTimeNormalizer implements NormalizerInterface, DenormalizerInterface
 
         return $dateTime->format('Y-m-d\TH:i:sP');
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            DateTimeInterface::class => true
+        ];
+    }
 }

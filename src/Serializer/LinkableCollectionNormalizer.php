@@ -70,4 +70,14 @@ class LinkableCollectionNormalizer implements SerializerAwareInterface, Normaliz
         }
         return $result;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            AbstractLinkableCollection::class => true
+        ];
+    }
 }

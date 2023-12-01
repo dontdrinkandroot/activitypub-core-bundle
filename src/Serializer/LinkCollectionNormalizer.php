@@ -68,4 +68,14 @@ class LinkCollectionNormalizer implements NormalizerInterface, DenormalizerInter
         }
         return $data;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            LinkCollection::class => true
+        ];
+    }
 }

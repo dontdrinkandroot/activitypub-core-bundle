@@ -28,4 +28,14 @@ class ObjectNormalizer extends AbstractCoreTypeNormalizer
         }
         return $this->populateFromData($instance, $data);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            CoreObject::class => true
+        ];
+    }
 }

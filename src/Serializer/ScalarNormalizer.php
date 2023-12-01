@@ -51,4 +51,17 @@ class ScalarNormalizer implements NormalizerInterface, DenormalizerInterface
     {
         return $object;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            'string' => true,
+            'int' => true,
+            'float' => true,
+            'bool' => true
+        ];
+    }
 }

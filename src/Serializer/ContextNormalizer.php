@@ -79,4 +79,14 @@ class ContextNormalizer implements NormalizerInterface, DenormalizerInterface
 
         return (array)$value;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            JsonLdContext::class => true
+        ];
+    }
 }

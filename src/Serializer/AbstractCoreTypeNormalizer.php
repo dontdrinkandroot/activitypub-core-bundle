@@ -45,7 +45,7 @@ abstract class AbstractCoreTypeNormalizer
     /**
      * {@inheritdoc}
      */
-    public function supportsNormalization(mixed $data, string $format = null): bool
+    public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return is_object($data)
             && is_a($data, CoreType::class)
