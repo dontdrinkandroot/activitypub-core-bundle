@@ -4,10 +4,10 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature;
 
 use DateTime;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Header;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\SignatureVerificationException;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\PublicKeyResolverInterface;
 use Dontdrinkandroot\Common\Asserted;
-use Exception;
 use phpseclib3\Crypt\RSA;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -23,7 +23,7 @@ class SignatureVerifier implements SignatureVerifierInterface
     public function verifyRequest(Request $request): Uri
     {
         $signatureHeader = $request->headers->get(Header::SIGNATURE)
-            ?? throw new Exception('Missing Signature Header');
+            ?? throw new SignatureVerificationException('Missing Signature Header');
 
         $this->verifyDateNotExpired($request);
         $this->verifyDigestMatching($request);
@@ -51,7 +51,7 @@ class SignatureVerifier implements SignatureVerifierInterface
 
         $verificationResult = $publicKey->verify($signatureString, $signature);
         if (true !== $verificationResult) {
-            throw new Exception('Signature Verification Failed');
+            throw new SignatureVerificationException('Signature Verification Failed');
         }
 
         return $actorPublicKey->owner;
@@ -66,7 +66,7 @@ class SignatureVerifier implements SignatureVerifierInterface
             $signatureHeaderPart = trim($signatureHeaderPart);
             $signatureHeaderPartParts = explode('=', $signatureHeaderPart, 2);
             if (2 !== count($signatureHeaderPartParts)) {
-                throw new Exception('Invalid Signature Header Part: ' . $signatureHeaderPart);
+                throw new SignatureVerificationException('Invalid Signature Header Part: ' . $signatureHeaderPart);
             }
             $signatureParts[$signatureHeaderPartParts[0]] = trim($signatureHeaderPartParts[1], '"');
         }
@@ -96,17 +96,17 @@ class SignatureVerifier implements SignatureVerifierInterface
         }
 
         if (null === $values) {
-            throw new Exception('Missing Header Value');
+            throw new SignatureVerificationException('Missing Header Value');
         }
 
         if (1 !== count($values)) {
-            throw new Exception('Multiple Header Values');
+            throw new SignatureVerificationException('Multiple Header Values');
         }
 
         $value = $values[0];
 
         if (null === $value) {
-            throw new Exception('Missing Header Value');
+            throw new SignatureVerificationException('Missing Header Value');
         }
 
         return $value;
@@ -117,17 +117,17 @@ class SignatureVerifier implements SignatureVerifierInterface
         $body = $request->getContent();
         $digestHeader = $request->headers->get(Header::DIGEST);
         if (!empty($body) && null === $digestHeader) {
-            throw new Exception('Missing Digest Header');
+            throw new SignatureVerificationException('Missing Digest Header');
         }
         if (null !== $digestHeader) {
             $digestParts = explode('=', $digestHeader, 2);
             if (2 !== count($digestParts)) {
-                throw new Exception('Invalid Digest Header: ' . $digestHeader);
+                throw new SignatureVerificationException('Invalid Digest Header: ' . $digestHeader);
             }
             $digest = $digestParts[1];
             $digestAlgorithm = SignatureTools::resolveDigestAlgorithm($digestParts[0]);
             if (!SignatureTools::verifyDigest($body, $digest, $digestAlgorithm)) {
-                throw new Exception('Digest Verification Failed');
+                throw new SignatureVerificationException('Digest Verification Failed');
             }
         }
     }
@@ -136,10 +136,10 @@ class SignatureVerifier implements SignatureVerifierInterface
     {
         $dateHeader = $request->headers->get(Header::DATE);
         if (null === $dateHeader) {
-            throw new Exception('Missing Date Header');
+            throw new SignatureVerificationException('Missing Date Header');
         }
         if (new DateTime($dateHeader) < new DateTime('-12 hours')) {
-            throw new Exception('Date Header Expired');
+            throw new SignatureVerificationException('Date Header Expired');
         }
     }
 }
