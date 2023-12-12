@@ -7,7 +7,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\AbstractActivity;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Accept;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Follow;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Actor;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
@@ -25,7 +25,11 @@ class AcceptFollowInboxHandler implements InboxHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(AbstractActivity $activity, Uri $signActorId, ?LocalActorInterface $inboxActor = null): ?Response
+    public function handle(
+        AbstractActivity $activity,
+        Actor $signActor,
+        ?LocalActorInterface $inboxActor = null
+    ): ?Response
     {
         if (
             !($activity instanceof Accept)
@@ -35,7 +39,7 @@ class AcceptFollowInboxHandler implements InboxHandlerInterface
             return null;
         }
 
-        if (!$acceptActorId->equals($signActorId)) {
+        if (!$acceptActorId->equals($signActor->getId())) {
             return new Response(status: Response::HTTP_FORBIDDEN, headers: [
                 'Content-Type' => 'application/activity+json'
             ]);
@@ -50,7 +54,7 @@ class AcceptFollowInboxHandler implements InboxHandlerInterface
             return null;
         }
 
-        if (!$followObjectId->equals($signActorId)) {
+        if (!$followObjectId->equals($signActor->getId())) {
             return new Response(status: Response::HTTP_FORBIDDEN, headers: [
                 'Content-Type' => 'application/activity+json'
             ]);
@@ -62,7 +66,7 @@ class AcceptFollowInboxHandler implements InboxHandlerInterface
             ]);
         }
 
-        $this->followService->onFollowingResponse($localActor, $signActorId, FollowResponseType::ACCEPTED);
+        $this->followService->onFollowingResponse($localActor, $signActor->getId(), FollowResponseType::ACCEPTED);
 
         return new Response(status: Response::HTTP_ACCEPTED, headers: [
             'Content-Type' => 'application/activity+json'

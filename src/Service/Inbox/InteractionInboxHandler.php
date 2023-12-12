@@ -8,7 +8,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Announce;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Dislike;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Like;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Actor;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Share\InteractionServiceInterface;
@@ -28,7 +28,7 @@ class InteractionInboxHandler implements InboxHandlerInterface
      */
     public function handle(
         AbstractActivity $activity,
-        Uri $signActorId,
+        Actor $signActor,
         ?LocalActorInterface $inboxActor = null
     ): ?Response {
         if (
@@ -39,7 +39,7 @@ class InteractionInboxHandler implements InboxHandlerInterface
             return null;
         }
 
-        if (!$activityActorId->equals($signActorId)) {
+        if (!$activityActorId->equals($signActor->getId())) {
             return new Response(status: Response::HTTP_FORBIDDEN, headers: [
                 'Content-Type' => 'application/activity+json'
             ]);

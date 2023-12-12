@@ -5,22 +5,25 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature;
 use DateTime;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Header;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\SignatureVerificationException;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Actor;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\PublicKeyResolverInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Dontdrinkandroot\Common\Asserted;
 use phpseclib3\Crypt\RSA;
 use Symfony\Component\HttpFoundation\Request;
 
 class SignatureVerifier implements SignatureVerifierInterface
 {
-    public function __construct(private readonly PublicKeyResolverInterface $publicKeyResolver)
-    {
+    public function __construct(
+        private readonly ObjectResolverInterface $objectResolver
+    ) {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function verifyRequest(Request $request): Uri
+    public function verifyRequest(Request $request): Actor
     {
         $signatureHeader = $request->headers->get(Header::SIGNATURE)
             ?? throw new SignatureVerificationException('Missing Signature Header');
@@ -29,7 +32,14 @@ class SignatureVerifier implements SignatureVerifierInterface
         $this->verifyDigestMatching($request);
 
         $signatureParts = $this->parseSignatureHeader($signatureHeader);
-        $actorPublicKey = $this->publicKeyResolver->resolve(Uri::fromString($signatureParts['keyId']));
+        $keyId = Uri::fromString($signatureParts['keyId']);
+        $actorId = $keyId->withFragment(null);
+
+        $actor = $this->objectResolver->resolveTyped($actorId, Actor::class)
+            ?? throw new SignatureVerificationException('Could not resolve actor for keyId: ' . $keyId);
+
+        $publicKeyPem = $actor->publicKey?->publicKeyPem
+            ?? throw new SignatureVerificationException('Could not resolve public key for keyId: ' . $keyId);
 
         // TODO: Make sure all required headers are present
         $signHeaderNames = explode(' ', $signatureParts['headers']);
@@ -46,7 +56,7 @@ class SignatureVerifier implements SignatureVerifierInterface
 
         // TODO: Check algorithm
 
-        $publicKey = Asserted::instanceOf(RSA::loadPublicKey($actorPublicKey->publicKeyPem), RSA\PublicKey::class);
+        $publicKey = Asserted::instanceOf(RSA::loadPublicKey($publicKeyPem), RSA\PublicKey::class);
         $publicKey = $publicKey->withPadding(RSA::SIGNATURE_PKCS1);
 
         $verificationResult = $publicKey->verify($signatureString, $signature);
@@ -54,7 +64,7 @@ class SignatureVerifier implements SignatureVerifierInterface
             throw new SignatureVerificationException('Signature Verification Failed');
         }
 
-        return $actorPublicKey->owner;
+        return $actor;
     }
 
     private function parseSignatureHeader(string $signatureHeader): array

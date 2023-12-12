@@ -5,7 +5,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\AbstractActivity;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Follow;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Actor;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +23,7 @@ class FollowInboxHandler implements InboxHandlerInterface
      */
     public function handle(
         AbstractActivity $activity,
-        Uri $signActorId,
+        Actor $signActor,
         ?LocalActorInterface $inboxActor = null
     ): ?Response
     {
@@ -35,7 +35,7 @@ class FollowInboxHandler implements InboxHandlerInterface
             return null;
         }
 
-        if (!$signActorId->equals($remoteActorId)) {
+        if (!$remoteActorId->equals($signActor->getId())) {
             return new Response(status: Response::HTTP_FORBIDDEN, headers: [
                 'Content-Type' => 'application/activity+json'
             ]);

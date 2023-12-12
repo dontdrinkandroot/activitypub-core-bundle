@@ -2,11 +2,12 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Config\Services;
 
+use Dontdrinkandroot\ActivityPubCoreBundle\Event\InboxEvent;
+use Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener\Inbox\AcceptFollowListener;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowStorageInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\AcceptFollowInboxHandler;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\FollowInboxHandler;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\InteractionInboxHandler;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\RejectFollowInboxHandler;
@@ -26,13 +27,13 @@ return function (ContainerConfigurator $configurator): void {
         ])
         ->tag(TagName::INBOX_HANDLER);
 
-    $services->set(AcceptFollowInboxHandler::class)
+    $services->set(AcceptFollowListener::class)
         ->args([
             service(FollowServiceInterface::class),
             service(ObjectResolverInterface::class),
             service(LocalActorServiceInterface::class)
         ])
-        ->tag(TagName::INBOX_HANDLER);
+        ->tag(TagName::KERNEL_EVENT_LISTENER, ['event' => InboxEvent::class]);
 
     $services->set(RejectFollowInboxHandler::class)
         ->args([

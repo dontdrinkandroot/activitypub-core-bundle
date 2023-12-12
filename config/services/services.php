@@ -59,14 +59,10 @@ return function (ContainerConfigurator $configurator): void {
     $services->set(SignatureGenerator::class);
     $services->alias(SignatureGeneratorInterface::class, SignatureGenerator::class);
 
-    $services->set(ObjectResolverPublicKeyResolver::class)
-        ->args([
-            service(ObjectResolverInterface::class)
-        ]);
-    $services->alias(PublicKeyResolverInterface::class, ObjectResolverPublicKeyResolver::class);
-
     $services->set(SignatureVerifier::class)#
-    ->args([service(PublicKeyResolverInterface::class)]);
+    ->args([
+        service(ObjectResolverInterface::class)
+    ]);
     $services->alias(SignatureVerifierInterface::class, SignatureVerifier::class);
 
     $services->set(ActivityPubClient::class)

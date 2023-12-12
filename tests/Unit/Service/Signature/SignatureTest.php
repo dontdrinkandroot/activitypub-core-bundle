@@ -5,9 +5,12 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\Unit\Service\Signature;
 use DateTime;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Header;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\SignKey;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Actor;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\ActorType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\PublicKey;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\PublicKeyResolverInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\KeyPairGenerator;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureGenerator;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureTools;
@@ -64,20 +67,26 @@ JSON;
         $this->assertArrayHasKey('Digest', $headers);
         $this->assertArrayHasKey('Content-Type', $headers);
 
-        $publicKeyResolver = $this->createMock(PublicKeyResolverInterface::class);
-        $publicKeyResolver
+        $objectResolver = $this->createMock(ObjectResolverInterface::class);
+        $objectResolver
             ->expects($this->once())
-            ->method('resolve')
-            ->with(self::uriMatcher('https://mastodon.localdomain/users/test#main-key'))
-            ->willReturn(
-                new PublicKey(
-                    id: $signActorId->withFragment('main-key'),
-                    owner: $signActorId,
-                    publicKeyPem: $keyPair->publicKey
-                )
+            ->method('resolveTyped')
+            ->with(self::uriMatcher('https://mastodon.localdomain/users/test'), Actor::class)
+            ->willReturnCallback(
+                function (Uri $uri, string $type) use ($signActorId, $keyPair) {
+                    $actor = new Actor(ActorType::PERSON);
+                    $actor->id = $signActorId;
+                    $actor->inbox = Uri::fromString('https://mastodon.localdomain/users/test/inbox');
+                    $actor->publicKey = new PublicKey(
+                        id: $signActorId->withFragment('main-key'),
+                        owner: $signActorId,
+                        publicKeyPem: $keyPair->publicKey
+                    );
+                    return $actor;
+                }
             );
 
-        $signatureVerifier = new SignatureVerifier($publicKeyResolver);
+        $signatureVerifier = new SignatureVerifier($objectResolver);
 
         $request = Request::create(
             uri: 'https://mastodon.localdomain/users/test/inbox',

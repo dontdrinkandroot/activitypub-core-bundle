@@ -2,12 +2,14 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Inbox;
 
+use Dontdrinkandroot\ActivityPubCoreBundle\Event\InboxEvent;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\AbstractActivity;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ActivityStreamEncoder;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\InboxHandlerInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureVerifierInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,6 +26,7 @@ class PostAction extends AbstractController
         private readonly SignatureVerifierInterface $signatureVerifier,
         private readonly SerializerInterface $serializer,
         private readonly LocalActorServiceInterface $localActorService,
+        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly iterable $handlers,
         private readonly LoggerInterface $logger
     ) {
@@ -41,12 +44,12 @@ class PostAction extends AbstractController
             );
         }
 
-        $signActorId = $this->signatureVerifier->verifyRequest($request);
         $coreType = $this->serializer->deserialize(
             $request->getContent(),
             CoreType::class,
             ActivityStreamEncoder::FORMAT
         );
+
 
         if (!$coreType instanceof AbstractActivity) {
 
@@ -58,8 +61,16 @@ class PostAction extends AbstractController
             );
         }
 
+        $inboxEvent = new InboxEvent($request, $coreType, $this->signatureVerifier, $localActor);
+        $this->eventDispatcher->dispatch($inboxEvent);
+        if (null !== ($response = $inboxEvent->getResponse())) {
+            return $response;
+        }
+
+        $signActor = $this->signatureVerifier->verifyRequest($request);
+
         foreach ($this->handlers as $handler) {
-            $response = $handler->handle($coreType, $signActorId, $localActor);
+            $response = $handler->handle($coreType, $signActor, $localActor);
             if (null !== $response) {
 
                 $this->logger->info('Inbox: Handler found', ['username' => $username, 'type' => $coreType->getType(), 'handler' => get_class($handler)]);

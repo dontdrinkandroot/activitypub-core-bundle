@@ -7,7 +7,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\AbstractActivity;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Follow;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Undo;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Actor;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowStorageInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
@@ -27,7 +27,7 @@ class UndoFollowInboxHandler implements InboxHandlerInterface
      */
     public function handle(
         AbstractActivity $activity,
-        Uri $signActorId,
+        Actor $signActor,
         ?LocalActorInterface $inboxActor = null
     ): ?Response {
         if (
@@ -38,7 +38,7 @@ class UndoFollowInboxHandler implements InboxHandlerInterface
             return null;
         }
 
-        if (!$undoActorId->equals($signActorId)) {
+        if (!$undoActorId->equals($signActor->getId())) {
             return new Response(status: Response::HTTP_FORBIDDEN, headers: [
                 'Content-Type' => 'application/activity+json'
             ]);
@@ -53,7 +53,7 @@ class UndoFollowInboxHandler implements InboxHandlerInterface
             return null;
         }
 
-        if (!$followActorId->equals($signActorId)) {
+        if (!$followActorId->equals($signActor->getId())) {
             return new Response(status: Response::HTTP_FORBIDDEN, headers: [
                 'Content-Type' => 'application/activity+json'
             ]);
