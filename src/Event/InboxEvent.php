@@ -9,8 +9,9 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureVerifierIn
 use Dontdrinkandroot\Common\Asserted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\EventDispatcher\Event;
 
-class InboxEvent
+class InboxEvent extends Event
 {
     private ?Response $response = null;
 
