@@ -4,6 +4,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Client;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\ActivityPubClientException;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Header;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\SignKey;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
@@ -14,7 +15,6 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureGeneratorI
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureTools;
 use Dontdrinkandroot\Common\Asserted;
 use JsonException;
-use RuntimeException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -66,7 +66,7 @@ class ActivityPubClient implements ActivityPubClientInterface
             );
         } catch (ClientExceptionInterface|ServerExceptionInterface $e) {
             $content = $this->formatJsonContent($response);
-            throw new RuntimeException($content, $response->getStatusCode(), $e);
+            throw new ActivityPubClientException($content, $response->getStatusCode(), $e);
         } catch (Throwable $e) {
             throw $e;
         }

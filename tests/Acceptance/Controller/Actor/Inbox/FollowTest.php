@@ -2,6 +2,7 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\Acceptance\Controller\Actor\Inbox;
 
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\ActivityPubClientException;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Direction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowResponseMode;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
@@ -12,7 +13,6 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowService;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowStorageInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\WebTestCase;
-use RuntimeException;
 
 class FollowTest extends WebTestCase
 {
@@ -34,8 +34,9 @@ class FollowTest extends WebTestCase
 }
 JSON;
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(ActivityPubClientException::class);
         $this->expectExceptionMessage('Actor not found');
+        $this->expectExceptionCode(404);
         $activityPubClient->request(
             method: 'POST',
             uri: Uri::fromString('http://localhost/@missing/inbox'),
