@@ -48,7 +48,7 @@ class SharedInboxAction extends AbstractController
         //return new Response('', Response::HTTP_UNPROCESSABLE_ENTITY);
         return new JsonResponse(
             data: ['error' => 'No handler found for ' . $coreType->getType()],
-            status: Response::HTTP_INTERNAL_SERVER_ERROR
+            status: Response::HTTP_NOT_IMPLEMENTED
         );
     }
 }
