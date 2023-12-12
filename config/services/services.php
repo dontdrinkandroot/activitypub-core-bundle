@@ -17,8 +17,6 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Routing\RoutingLoader;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\TypeClassRegistry;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorUriGenerator;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorUriGeneratorInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\ObjectResolverPublicKeyResolver;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\PublicKeyResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Client\ActivityPubClient;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Client\ActivityPubClientInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Delivery\DeliveryServiceInterface;
@@ -36,7 +34,6 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureVerifier;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureVerifierInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\WebFinger\CachedWebFingerService;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\WebFinger\WebFingerServiceInterface;
-use Dontdrinkandroot\BridgeBundle\Model\Container\Tag;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
@@ -130,7 +127,6 @@ return function (ContainerConfigurator $configurator): void {
 
     $services
         ->set(SharedInboxAction::class)
-        ->arg('$handlers', tagged_iterator(TagName::INBOX_HANDLER))
         ->autowire()
         ->autoconfigure()
         ->tag(TagName::CONTROLLER);
@@ -149,7 +145,6 @@ return function (ContainerConfigurator $configurator): void {
 
     $services
         ->set(InboxPostAction::class)
-        ->arg('$handlers', tagged_iterator(TagName::INBOX_HANDLER))
         ->autowire()
         ->autoconfigure()
         ->tag(TagName::CONTROLLER)

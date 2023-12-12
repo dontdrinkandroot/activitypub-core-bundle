@@ -6,7 +6,6 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Event\InboxEvent;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\AbstractActivity;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ActivityStreamEncoder;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\InboxHandlerInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureVerifierInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,14 +16,10 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class SharedInboxAction extends AbstractController
 {
-    /**
-     * @param iterable<InboxHandlerInterface> $handlers
-     */
     public function __construct(
         private readonly SignatureVerifierInterface $signatureVerifier,
         private readonly SerializerInterface $serializer,
         private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly iterable $handlers
     ) {
     }
 
@@ -47,15 +42,6 @@ class SharedInboxAction extends AbstractController
         $this->eventDispatcher->dispatch($inboxEvent);
         if (null !== ($response = $inboxEvent->getResponse())) {
             return $response;
-        }
-
-        $signActorId = $this->signatureVerifier->verifyRequest($request);
-
-        foreach ($this->handlers as $handler) {
-            $response = $handler->handle($coreType, $signActorId);
-            if (null !== $response) {
-                return $response;
-            }
         }
 
         //TODO: Replace when all handlers are implemented

@@ -5,7 +5,6 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\DependencyInjection;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\ParamName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowResponseMode;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\InboxHandlerInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectProviderInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -25,10 +24,6 @@ class DdrActivityPubCoreExtension extends Extension implements PrependExtensionI
         $config = $this->processConfiguration($configuration, $configs);
 
         $container
-            ->registerForAutoconfiguration(InboxHandlerInterface::class)
-            ->addTag(TagName::INBOX_HANDLER);
-
-        $container
             ->registerForAutoconfiguration(ObjectProviderInterface::class)
             ->addTag(TagName::OBJECT_PROVIDER);
 
@@ -43,7 +38,7 @@ class DdrActivityPubCoreExtension extends Extension implements PrependExtensionI
         $loader->load('services.php');
         $loader->load('types.php');
         $loader->load('serializer.php');
-        $loader->load('handlers.php');
+        $loader->load('inbox_listeners.php');
     }
 
     /**

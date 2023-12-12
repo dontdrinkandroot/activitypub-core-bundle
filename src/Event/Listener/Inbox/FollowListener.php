@@ -1,16 +1,14 @@
 <?php
 
-namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox;
+namespace Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener\Inbox;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\AbstractActivity;
+use Dontdrinkandroot\ActivityPubCoreBundle\Event\InboxEvent;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Follow;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Actor;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class FollowInboxHandler implements InboxHandlerInterface
+class FollowListener
 {
     public function __construct(
         private readonly LocalActorServiceInterface $localActorService,
@@ -18,39 +16,36 @@ class FollowInboxHandler implements InboxHandlerInterface
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(
-        AbstractActivity $activity,
-        Actor $signActor,
-        ?LocalActorInterface $inboxActor = null
-    ): ?Response
+    public function __invoke(InboxEvent $event): void
     {
+        $activity = $event->activity;
         if (
             (!$activity instanceof Follow)
             || (null === ($targetObject = $activity->object))
             || (null === ($remoteActorId = $activity->actor?->getSingleValueId()))
         ) {
-            return null;
+            return;
         }
 
+        $signActor = $event->verify();
         if (!$remoteActorId->equals($signActor->getId())) {
-            return new Response(status: Response::HTTP_FORBIDDEN, headers: [
+            $event->setResponse(new Response(status: Response::HTTP_FORBIDDEN, headers: [
                 'Content-Type' => 'application/activity+json'
-            ]);
+            ]));
+            return;
         }
 
         if (null === ($targetLocalActor = $this->localActorService->findLocalActorByUri($targetObject->getId()))) {
-            return new Response(status: Response::HTTP_NOT_FOUND, headers: [
+            $event->setResponse(new Response(status: Response::HTTP_NOT_FOUND, headers: [
                 'Content-Type' => 'application/activity+json'
-            ]);
+            ]));
+            return;
         }
 
         $this->followService->onFollowerRequest($targetLocalActor, $remoteActorId);
 
-        return new Response(status: Response::HTTP_ACCEPTED, headers: [
+        $event->setResponse(new Response(status: Response::HTTP_ACCEPTED, headers: [
             'Content-Type' => 'application/activity+json'
-        ]);
+        ]));
     }
 }

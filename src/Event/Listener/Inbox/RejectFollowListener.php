@@ -1,19 +1,17 @@
 <?php
 
-namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox;
+namespace Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener\Inbox;
 
+use Dontdrinkandroot\ActivityPubCoreBundle\Event\InboxEvent;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowResponseType;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\AbstractActivity;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Follow;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Reject;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Actor;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class RejectFollowInboxHandler implements InboxHandlerInterface
+class RejectFollowListener
 {
     public function __construct(
         private readonly FollowServiceInterface $followService,
@@ -22,27 +20,23 @@ class RejectFollowInboxHandler implements InboxHandlerInterface
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(
-        AbstractActivity $activity,
-        Actor $signActor,
-        ?LocalActorInterface $inboxActor = null
-    ): ?Response
+    public function __invoke(InboxEvent $event): void
     {
+        $activity = $event->activity;
         if (
             !($activity instanceof Reject)
             || (null === $activity->object)
             || (null === ($acceptActorId = $activity->actor?->getSingleValueId()))
         ) {
-            return null;
+            return;
         }
 
+        $signActor = $event->verify();
         if (!$acceptActorId->equals($signActor->getId())) {
-            return new Response(status: Response::HTTP_FORBIDDEN, headers: [
+            $event->setResponse(new Response(status: Response::HTTP_FORBIDDEN, headers: [
                 'Content-Type' => 'application/activity+json'
-            ]);
+            ]));
+            return;
         }
 
         $follow = $this->objectResolver->resolve($activity->object);
@@ -51,25 +45,27 @@ class RejectFollowInboxHandler implements InboxHandlerInterface
             || (null === ($followActorId = $follow->actor?->getSingleValueId()))
             || (null === ($followObjectId = $follow->object?->getId()))
         ) {
-            return null;
+            return;
         }
 
         if (!$followObjectId->equals($signActor->getId())) {
-            return new Response(status: Response::HTTP_FORBIDDEN, headers: [
+            $event->setResponse(new Response(status: Response::HTTP_FORBIDDEN, headers: [
                 'Content-Type' => 'application/activity+json'
-            ]);
+            ]));
+            return;
         }
 
         if (null === ($localActor = $this->localActorService->findLocalActorByUri($followActorId))) {
-            return new Response(status: Response::HTTP_NOT_FOUND, headers: [
+            $event->setResponse(new Response(status: Response::HTTP_NOT_FOUND, headers: [
                 'Content-Type' => 'application/activity+json'
-            ]);
+            ]));
+            return;
         }
 
         $this->followService->onFollowingResponse($localActor, $followObjectId, FollowResponseType::REJECTED);
 
-        return new Response(status: Response::HTTP_ACCEPTED, headers: [
+        $event->setResponse(new Response(status: Response::HTTP_ACCEPTED, headers: [
             'Content-Type' => 'application/activity+json'
-        ]);
+        ]));
     }
 }

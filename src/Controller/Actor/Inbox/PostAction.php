@@ -7,7 +7,6 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\AbstractActivity;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ActivityStreamEncoder;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\InboxHandlerInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureVerifierInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
@@ -19,15 +18,11 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class PostAction extends AbstractController
 {
-    /**
-     * @param iterable<InboxHandlerInterface> $handlers
-     */
     public function __construct(
         private readonly SignatureVerifierInterface $signatureVerifier,
         private readonly SerializerInterface $serializer,
         private readonly LocalActorServiceInterface $localActorService,
         private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly iterable $handlers,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -65,18 +60,6 @@ class PostAction extends AbstractController
         $this->eventDispatcher->dispatch($inboxEvent);
         if (null !== ($response = $inboxEvent->getResponse())) {
             return $response;
-        }
-
-        $signActor = $this->signatureVerifier->verifyRequest($request);
-
-        foreach ($this->handlers as $handler) {
-            $response = $handler->handle($coreType, $signActor, $localActor);
-            if (null !== $response) {
-
-                $this->logger->info('Inbox: Handler found', ['username' => $username, 'type' => $coreType->getType(), 'handler' => get_class($handler)]);
-
-                return $response;
-            }
         }
 
         $this->logger->warning('Inbox: No handler found', ['username' => $username, 'type' => $coreType->getType()]);
