@@ -11,6 +11,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObjectsCo
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\LinkCollection;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Source;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
+use Override;
 use RuntimeException;
 
 class CoreObject extends CoreType
@@ -69,6 +70,7 @@ class CoreObject extends CoreType
 
     public ?string $duration = null;
 
+    #[Override]
     public function getType(): string
     {
         return ObjectType::OBJECT->value;

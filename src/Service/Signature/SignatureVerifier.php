@@ -10,6 +10,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\PublicKeyResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Dontdrinkandroot\Common\Asserted;
+use Override;
 use phpseclib3\Crypt\RSA;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -20,9 +21,7 @@ class SignatureVerifier implements SignatureVerifierInterface
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function verifyRequest(Request $request): Actor
     {
         $signatureHeader = $request->headers->get(Header::SIGNATURE)
@@ -42,7 +41,7 @@ class SignatureVerifier implements SignatureVerifierInterface
             ?? throw new SignatureVerificationException('Could not resolve public key for keyId: ' . $keyId);
 
         // TODO: Make sure all required headers are present
-        $signHeaderNames = explode(' ', $signatureParts['headers']);
+        $signHeaderNames = explode(' ', (string)$signatureParts['headers']);
 
         $headers = $this->getRequestHeaders($request);
         $headers[Header::REQUEST_TARGET] = sprintf(
@@ -52,7 +51,7 @@ class SignatureVerifier implements SignatureVerifierInterface
         );
         $signatureString = SignatureTools::buildSignatureString($signHeaderNames, $headers);
 
-        $signature = base64_decode($signatureParts['signature'], true);
+        $signature = base64_decode((string)$signatureParts['signature'], true);
 
         // TODO: Check algorithm
 

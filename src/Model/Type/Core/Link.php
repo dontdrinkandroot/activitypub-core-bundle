@@ -5,10 +5,11 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
+use Override;
 
 class Link extends CoreType
 {
-    public const TYPE = 'Link';
+    public const string TYPE = 'Link';
 
     public ?Uri $href = null;
 
@@ -34,9 +35,7 @@ class Link extends CoreType
         return $link;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getType(): string
     {
         return self::TYPE;

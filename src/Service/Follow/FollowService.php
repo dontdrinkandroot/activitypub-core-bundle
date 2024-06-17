@@ -18,6 +18,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorUriGeneratorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Delivery\DeliveryServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
+use Override;
 use RuntimeException;
 
 class FollowService implements FollowServiceInterface
@@ -31,9 +32,7 @@ class FollowService implements FollowServiceInterface
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function follow(LocalActorInterface $localActor, Uri $remoteActorId): void
     {
         $this->followStorage->add($localActor, $remoteActorId, Direction::OUTGOING);
@@ -47,9 +46,7 @@ class FollowService implements FollowServiceInterface
         $this->deliveryService->send($localActor, $this->getInbox($remoteActorId), $follow);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function unfollow(LocalActorInterface $localActor, Uri $remoteActorId): void
     {
         $this->followStorage->remove($localActor, $remoteActorId, Direction::OUTGOING);
@@ -68,9 +65,7 @@ class FollowService implements FollowServiceInterface
         $this->deliveryService->send($localActor, $this->getInbox($remoteActorId), $undo);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function acceptFollower(LocalActorInterface $localActor, Uri $remoteActorId): void
     {
         $this->followStorage->accept($localActor, $remoteActorId, Direction::INCOMING);
@@ -89,9 +84,7 @@ class FollowService implements FollowServiceInterface
         $this->deliveryService->send($localActor, $this->getInbox($remoteActorId), $accept);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function rejectFollower(LocalActorInterface $localActor, Uri $remoteActorId): void
     {
         $this->followStorage->reject($localActor, $remoteActorId, Direction::INCOMING);
@@ -110,25 +103,19 @@ class FollowService implements FollowServiceInterface
         $this->deliveryService->send($localActor, $this->getInbox($remoteActorId), $reject);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function findFollowingState(LocalActorInterface $localActor, Uri $remoteActorId): ?FollowState
     {
         return $this->followStorage->findState($localActor, $remoteActorId, Direction::OUTGOING);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function findFollowerState(LocalActorInterface $localActor, Uri $remoteActorId): ?FollowState
     {
         return $this->followStorage->findState($localActor, $remoteActorId, Direction::INCOMING);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function listFollowers(
         LocalActorInterface $localActor,
         FollowState $followState = FollowState::ACCEPTED,
@@ -139,9 +126,7 @@ class FollowService implements FollowServiceInterface
         return $this->followStorage->list($localActor, Direction::INCOMING, $followState, $offset, $itemsPerPage);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getNumFollowers(
         LocalActorInterface $localActor,
         FollowState $followState = FollowState::ACCEPTED
@@ -149,9 +134,7 @@ class FollowService implements FollowServiceInterface
         return $this->followStorage->count($localActor, Direction::INCOMING, $followState);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function listFollowing(
         LocalActorInterface $localActor,
         FollowState $followState = FollowState::ACCEPTED,
@@ -162,9 +145,7 @@ class FollowService implements FollowServiceInterface
         return $this->followStorage->list($localActor, Direction::OUTGOING, $followState, $offset, $itemsPerPage);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getNumFollowing(
         LocalActorInterface $localActor,
         FollowState $followState = FollowState::ACCEPTED
@@ -172,9 +153,7 @@ class FollowService implements FollowServiceInterface
         return $this->followStorage->count($localActor, Direction::OUTGOING, $followState);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function onFollowerRequest(LocalActorInterface $localActor, Uri $remoteActorId): void
     {
         $this->followStorage->add($localActor, $remoteActorId, Direction::INCOMING);
@@ -186,9 +165,7 @@ class FollowService implements FollowServiceInterface
         };
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function onFollowingResponse(
         LocalActorInterface $localActor,
         Uri $remoteActorId,

@@ -6,15 +6,14 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\Link;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\Common\Asserted;
+use Override;
 
 /**
  * @extends AbstractLinkableCollection<CoreObject, LinkableObject>
  */
 class LinkableObjectsCollection extends AbstractLinkableCollection
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public static function getLinkableClass(): string
     {
         return LinkableObject::class;

@@ -3,6 +3,7 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\WebFinger;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
+use Override;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -14,14 +15,12 @@ class CachedWebFingerService extends WebFingerService
         parent::__construct($httpClient);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function resolveIri(string $username, string $domain): ?Uri
     {
         return $this->cache->get(
             sprintf('webfinger.%s-at-%s', $username, $domain),
-            function (ItemInterface $item) use ($username, $domain) {
+            function (ItemInterface $item) use ($username, $domain): ?Uri {
                 $item->expiresAfter(86400);
                 return parent::resolveIri($username, $domain);
             }

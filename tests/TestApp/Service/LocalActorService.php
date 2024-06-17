@@ -13,6 +13,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorUriGeneratorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Model\StaticLocalActor;
+use Override;
 use RuntimeException;
 
 class LocalActorService implements LocalActorServiceInterface
@@ -108,9 +109,7 @@ PEM
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function findLocalActorByUsername(string $username): ?LocalActorInterface
     {
         return match ($username) {
@@ -120,9 +119,7 @@ PEM
         };
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function findLocalActorByUri(Uri $uri): ?LocalActorInterface
     {
         $username = $this->localActorUriGenerator->matchUsername($uri);
@@ -133,9 +130,7 @@ PEM
         return $this->findLocalActorByUsername($username);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getSignKey(LocalActorInterface $localActor): SignKey
     {
         $username = $localActor->getUsername();
@@ -152,9 +147,6 @@ PEM
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toActivityPubActor(LocalActorInterface $localActor): Actor
     {
         $username = $localActor->getUsername();
@@ -177,9 +169,7 @@ PEM
         return $actor;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function provide(Uri $uri, ?SignKey $signKey): Actor|false|null
     {
         $username = $this->localActorUriGenerator->matchUsername($uri);

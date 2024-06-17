@@ -2,41 +2,34 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Serializer;
 
+use Override;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
 
 class ActivityStreamEncoder implements EncoderInterface, DecoderInterface
 {
-    public const FORMAT = 'activity-stream';
-    const ACTIVITY_STREAM_NS = 'https://www.w3.org/ns/activitystreams';
+    public const string FORMAT = 'activity-stream';
+    public const string ACTIVITY_STREAM_NS = 'https://www.w3.org/ns/activitystreams';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsDecoding(string $format): bool
     {
         return self::FORMAT === $format;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function decode(string $data, string $format, array $context = []): object
     {
         return json_decode($data, false, 512, JSON_THROW_ON_ERROR);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsEncoding(string $format): bool
     {
         return self::FORMAT === $format;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function encode(mixed $data, string $format, array $context = []): string
     {
         assert(is_array($data));

@@ -6,22 +6,19 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Delivery\DeliveryServiceInterface;
+use Override;
 use RuntimeException;
 
 class DeliveryService implements DeliveryServiceInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function send(LocalActorInterface $localActor, Uri $recipientInbox, CoreType $payload): void
     {
         // TODO: Implement send() method.
         throw new RuntimeException(__FUNCTION__ . ' not implemented');
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function sendQueued(?int $limit = null): void
     {
         // TODO: Implement sendQueued() method.

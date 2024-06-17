@@ -2,11 +2,11 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity;
 
+use Override;
+
 class Invite extends Offer
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getType(): string
     {
         return ActivityType::INVITE->value;

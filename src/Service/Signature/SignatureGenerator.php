@@ -5,13 +5,12 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Header;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\SignKey;
 use Dontdrinkandroot\Common\Asserted;
+use Override;
 use phpseclib3\Crypt\RSA;
 
 class SignatureGenerator implements SignatureGeneratorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function generateSignatureHeader(string $method, string $path, SignKey $key, array $headers): string
     {
         $headers[Header::REQUEST_TARGET] = SignatureTools::createRequestTargetHeaderValue($method, $path);
@@ -44,7 +43,7 @@ class SignatureGenerator implements SignatureGeneratorInterface
             'keyId="%s",algorithm="rsa-sha256",headers="%s",signature="%s"',
             (string)$key->id,
             implode(' ', $signHeaderNames),
-            base64_encode($signature)
+            base64_encode((string)$signature)
         );
     }
 }

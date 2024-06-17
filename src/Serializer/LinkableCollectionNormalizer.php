@@ -3,6 +3,7 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Serializer;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\AbstractLinkableCollection;
+use Override;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
@@ -11,18 +12,14 @@ class LinkableCollectionNormalizer implements SerializerAwareInterface, Normaliz
 {
     use SerializerAwareTrait;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
         return is_a($type, AbstractLinkableCollection::class, true)
             && $format === ActivityStreamEncoder::FORMAT;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function denormalize(
         mixed $data,
         string $type,
@@ -44,17 +41,13 @@ class LinkableCollectionNormalizer implements SerializerAwareInterface, Normaliz
         return new $type($result);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return $data instanceof AbstractLinkableCollection && $format === ActivityStreamEncoder::FORMAT;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function normalize(mixed $object, string $format = null, array $context = []): array|string
     {
         assert($object instanceof AbstractLinkableCollection);
@@ -71,9 +64,6 @@ class LinkableCollectionNormalizer implements SerializerAwareInterface, Normaliz
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSupportedTypes(?string $format): array
     {
         return [

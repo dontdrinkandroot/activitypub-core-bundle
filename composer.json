@@ -30,13 +30,13 @@
         }
     },
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.3",
         "ext-openssl": "*",
         "dontdrinkandroot/common": "^0.2.2",
         "phpseclib/phpseclib": "^3.0",
         "symfony/config": "^6.4",
         "symfony/dependency-injection": "^6.4",
-        "symfony/framework-bundle": "^6.4",
+        "symfony/framework-bundle": "^6.4,!=6.4.8",
         "symfony/http-client": "^6.4",
         "symfony/serializer": "^6.4"
     },

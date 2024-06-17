@@ -5,15 +5,14 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CollectionPage;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\Link;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
+use Override;
 
 /**
  * @extends AbstractLinkable<CollectionPage>
  */
 class LinkableCollectionPage extends AbstractLinkable
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public static function getObjectClass(): string
     {
         return CollectionPage::class;

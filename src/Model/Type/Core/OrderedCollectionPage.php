@@ -5,6 +5,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Object\ObjectType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableCollection;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableCollectionPage;
+use Override;
 
 class OrderedCollectionPage extends OrderedCollection
 {
@@ -16,9 +17,7 @@ class OrderedCollectionPage extends OrderedCollection
 
     public ?int $startIndex = null; // TODO: xsd:nonNegativeInteger
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getType(): string
     {
         return ObjectType::ORDERED_COLLECTION_PAGE->value;

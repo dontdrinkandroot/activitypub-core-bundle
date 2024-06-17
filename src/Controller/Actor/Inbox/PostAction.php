@@ -47,8 +47,7 @@ class PostAction extends AbstractController
 
 
         if (!$coreType instanceof AbstractActivity) {
-
-            $this->logger->warning('Inbox: Not an Activity', ['username' => $username, 'type' => get_class($coreType)]);
+            $this->logger->warning('Inbox: Not an Activity', ['username' => $username, 'type' => $coreType::class]);
 
             return new JsonResponse(
                 data: ['error' => 'Not an Activity'],

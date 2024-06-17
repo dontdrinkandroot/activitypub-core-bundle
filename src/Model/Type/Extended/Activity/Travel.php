@@ -3,12 +3,11 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\IntransitiveActivity;
+use Override;
 
 class Travel extends IntransitiveActivity
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getType(): string
     {
         return IntransitiveActivityType::TRAVEL->value;

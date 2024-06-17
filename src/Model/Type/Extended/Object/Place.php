@@ -3,6 +3,7 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Object;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
+use Override;
 
 class Place extends CoreObject
 {
@@ -18,9 +19,7 @@ class Place extends CoreObject
 
     public ?string $units = null; // TODO: "cm" | " feet" | " inches" | " km" | " m" | " miles" | xsd:anyURI
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getType(): string
     {
         return ObjectType::PLACE->value;

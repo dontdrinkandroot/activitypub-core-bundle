@@ -4,23 +4,19 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Serializer;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\PublicKey;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
+use Override;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class PublicKeyNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
         return $type === PublicKey::class && $format === ActivityStreamEncoder::FORMAT;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): ?PublicKey
     {
         if (!is_object($data)) {
@@ -34,17 +30,13 @@ class PublicKeyNormalizer implements NormalizerInterface, DenormalizerInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return $data instanceof PublicKey && $format === ActivityStreamEncoder::FORMAT;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function normalize(mixed $object, string $format = null, array $context = []): array
     {
         assert($object instanceof PublicKey);
@@ -56,9 +48,6 @@ class PublicKeyNormalizer implements NormalizerInterface, DenormalizerInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSupportedTypes(?string $format): array
     {
         return [

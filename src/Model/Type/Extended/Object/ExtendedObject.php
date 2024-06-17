@@ -3,6 +3,7 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Object;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
+use Override;
 
 class ExtendedObject extends CoreObject
 {
@@ -10,9 +11,7 @@ class ExtendedObject extends CoreObject
     {
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getType(): string
     {
         return $this->type->value;

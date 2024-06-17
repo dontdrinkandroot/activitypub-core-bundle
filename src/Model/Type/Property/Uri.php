@@ -3,6 +3,7 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property;
 
 use InvalidArgumentException;
+use Override;
 use Stringable;
 
 class Uri implements Stringable
@@ -75,9 +76,7 @@ class Uri implements Stringable
         return $this->__toString();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function __toString(): string
     {
         $uri = '';

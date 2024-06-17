@@ -4,10 +4,10 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Object;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\SignKey;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\Common\Asserted;
+use Override;
 use RuntimeException;
 
 class ObjectResolver implements ObjectResolverInterface
@@ -20,9 +20,7 @@ class ObjectResolver implements ObjectResolverInterface
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function resolve(Uri|LinkableObject $object, ?SignKey $signKey = null): ?CoreObject
     {
         if ($object instanceof LinkableObject) {
@@ -44,9 +42,7 @@ class ObjectResolver implements ObjectResolverInterface
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function resolveTyped(Uri|LinkableObject $object, string $type, ?SignKey $signKey = null): ?CoreObject
     {
         $resolvedObject = $this->resolve($object, $signKey);

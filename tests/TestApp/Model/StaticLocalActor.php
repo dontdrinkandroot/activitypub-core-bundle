@@ -3,6 +3,7 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Model;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
+use Override;
 
 class StaticLocalActor implements LocalActorInterface
 {
@@ -11,9 +12,7 @@ class StaticLocalActor implements LocalActorInterface
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getUsername(): string
     {
         return $this->username;

@@ -6,28 +6,23 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\Link;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\Common\Asserted;
+use Override;
 
 class LinkNormalizer extends AbstractCoreTypeNormalizer
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     protected function supportsType(string $class): bool
     {
         return is_a($class, Link::class, true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     protected function supportsDenormalizationData(mixed $data): bool
     {
         return is_string($data) || is_object($data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     protected function denormalizeCoreType(mixed $data, string $type, array $context): CoreType
     {
         assert(is_a($type, Link::class, true));
@@ -41,9 +36,7 @@ class LinkNormalizer extends AbstractCoreTypeNormalizer
         return $this->populateFromData($link, $data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     protected function normalizeCoreType(CoreType $coreType): array|string
     {
         Asserted::instanceOf($coreType, Link::class);
@@ -54,9 +47,6 @@ class LinkNormalizer extends AbstractCoreTypeNormalizer
         return parent::normalizeCoreType($coreType);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSupportedTypes(?string $format): array
     {
         return [

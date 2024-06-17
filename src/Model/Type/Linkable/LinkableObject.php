@@ -5,15 +5,14 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\Link;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
+use Override;
 
 /**
  * @extends AbstractLinkable<CoreObject>
  */
 class LinkableObject extends AbstractLinkable
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public static function getObjectClass(): string
     {
         return CoreObject::class;

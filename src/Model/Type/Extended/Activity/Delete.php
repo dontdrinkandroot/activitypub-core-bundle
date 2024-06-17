@@ -3,12 +3,11 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\Activity;
+use Override;
 
 class Delete extends Activity
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getType(): string
     {
         return ActivityType::DELETE->value;

@@ -4,6 +4,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Serializer;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\Link;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\LinkCollection;
+use Override;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
@@ -12,18 +13,14 @@ class LinkCollectionNormalizer implements NormalizerInterface, DenormalizerInter
 {
     use SerializerAwareTrait;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
         return $type === LinkCollection::class && $format === ActivityStreamEncoder::FORMAT
             && (is_string($data) || is_object($data) || is_array($data));
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): LinkCollection
     {
         $linkCollection = new LinkCollection();
@@ -41,17 +38,13 @@ class LinkCollectionNormalizer implements NormalizerInterface, DenormalizerInter
         return $linkCollection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return $data instanceof LinkCollection && $format === ActivityStreamEncoder::FORMAT;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function normalize(mixed $object, string $format = null, array $context = []): array|string
     {
         assert($object instanceof LinkCollection);
@@ -69,9 +62,6 @@ class LinkCollectionNormalizer implements NormalizerInterface, DenormalizerInter
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSupportedTypes(?string $format): array
     {
         return [

@@ -5,6 +5,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Object\ObjectType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableCollection;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableCollectionPage;
+use Override;
 
 class CollectionPage extends Collection
 {
@@ -14,9 +15,7 @@ class CollectionPage extends Collection
 
     public ?LinkableCollectionPage $prev = null;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getType(): string
     {
         return ObjectType::COLLECTION_PAGE->value;

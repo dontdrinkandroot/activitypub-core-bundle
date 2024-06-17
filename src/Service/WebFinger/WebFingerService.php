@@ -3,6 +3,7 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\WebFinger;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
+use Override;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class WebFingerService implements WebFingerServiceInterface
@@ -12,9 +13,7 @@ class WebFingerService implements WebFingerServiceInterface
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function resolveIri(string $username, string $domain): ?Uri
     {
         $response = $this->httpClient->request(

@@ -14,7 +14,7 @@ class SignatureVerifierTest extends TestCase
         $this->markTestSkipped('Date is outdated and digest is not calculated correctly');
 
         $actorService = $this->createMock(ActorResolverInterface::class);
-        $publicKeyPem = <<<KEY
+        $publicKeyPem = <<<KEY_WRAP
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2p5g2QzhaSoEcNMY866a
 JLS8hM0+YqmW0Tu3HkToP19sI07fmzvKtE6kTJC2yXyKtH1n4NNUEuExgSAQL6qy
@@ -24,7 +24,7 @@ F3t6rPnSPh121oT3T+OMuaPfN4r949sVgzoeL1IFUp2rMisIVgyiwKUsfDpUON/K
 d8uEZffY4FAsSnt7xUw+SOKVheNhL2CVBz9rT8vVPGe8bNImXuGfT3qf+G1Sc4sD
 YwIDAQAB
 -----END PUBLIC KEY----- 
-KEY;
+KEY_WRAP;
         $actorService->method('getPublicKey')->willReturn($publicKeyPem);
         $signatureService = new SignatureVerifier($actorService);
 

@@ -7,6 +7,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Object\CustomObje
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\AbstractLinkable;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\Common\Asserted;
+use Override;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
@@ -19,18 +20,14 @@ class LinkableNormalizer implements SerializerAwareInterface, NormalizerInterfac
     {
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
         return is_a($type, AbstractLinkable::class, true)
             && $format === ActivityStreamEncoder::FORMAT;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): AbstractLinkable
     {
         assert(is_a($type, AbstractLinkable::class, true));
@@ -48,17 +45,13 @@ class LinkableNormalizer implements SerializerAwareInterface, NormalizerInterfac
         return new $type(object: $this->getSerializer()->denormalize($data, CustomObject::class, $format));
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return $data instanceof AbstractLinkable && $format === ActivityStreamEncoder::FORMAT;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function normalize(mixed $object, string $format = null, array $context = []): array|string
     {
         if (null !== ($link = $object->link)) {
@@ -68,9 +61,6 @@ class LinkableNormalizer implements SerializerAwareInterface, NormalizerInterfac
         return Asserted::array($this->getSerializer()->normalize($object->object, $format));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSupportedTypes(?string $format): array
     {
         return [

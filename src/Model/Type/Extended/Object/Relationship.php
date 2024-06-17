@@ -4,6 +4,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Object;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObject;
+use Override;
 
 class Relationship extends CoreObject
 {
@@ -13,9 +14,7 @@ class Relationship extends CoreObject
 
     public ?LinkableObject $relationship = null;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getType(): string
     {
         return ObjectType::RELATIONSHIP->value;

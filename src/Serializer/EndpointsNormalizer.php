@@ -4,6 +4,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Serializer;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Endpoints;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
+use Override;
 use stdClass;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
@@ -12,17 +13,13 @@ class EndpointsNormalizer implements SerializerAwareInterface, DenormalizerInter
 {
     use SerializerAwareTrait;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsDenormalization($data, string $type, string $format = null, array $context = []): bool
     {
         return $type === Endpoints::class && $format === ActivityStreamEncoder::FORMAT;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function denormalize($data, string $type, string $format = null, array $context = []): Endpoints
     {
         assert($data instanceof stdClass);
@@ -36,9 +33,6 @@ class EndpointsNormalizer implements SerializerAwareInterface, DenormalizerInter
         return $endpoints;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSupportedTypes(?string $format): array
     {
         return [

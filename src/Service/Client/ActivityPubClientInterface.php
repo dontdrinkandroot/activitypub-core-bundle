@@ -9,9 +9,6 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 
 interface ActivityPubClientInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function request(
         string $method,
         Uri $uri,

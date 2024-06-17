@@ -4,6 +4,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\HttpClien
 
 use Dontdrinkandroot\Common\Asserted;
 use Exception;
+use Override;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,9 +19,7 @@ class KernelBrowserHttpClient implements HttpClientInterface
         $this->kernelBrowser->catchExceptions(false);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function request(string $method, string $url, array $options = []): ResponseInterface
     {
         try {
@@ -55,17 +54,13 @@ class KernelBrowserHttpClient implements HttpClientInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function stream($responses, float $timeout = null): ResponseStreamInterface
     {
         throw new RuntimeException('Not implemented');
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function withOptions(array $options): static
     {
         throw new RuntimeException('Not implemented');

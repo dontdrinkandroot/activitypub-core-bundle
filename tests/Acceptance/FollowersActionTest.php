@@ -19,9 +19,9 @@ class FollowersActionTest extends WebTestCase
         $followStorage->expects(self::once())
             ->method('count')
             ->with(
-                self::callback(fn($argument) => $argument instanceof LocalActorInterface
+                self::callback(fn($argument): bool => $argument instanceof LocalActorInterface
                     && $argument->getUsername() === 'person'),
-                self::callback(fn($argument) => $argument instanceof Direction
+                self::callback(fn($argument): bool => $argument instanceof Direction
                     && $argument === Direction::INCOMING)
             )
             ->willReturn(9);
@@ -50,18 +50,18 @@ class FollowersActionTest extends WebTestCase
         $followStorage->expects(self::once())
             ->method('count')
             ->with(
-                self::callback(fn($argument) => $argument instanceof LocalActorInterface
+                self::callback(fn($argument): bool => $argument instanceof LocalActorInterface
                     && $argument->getUsername() === 'person'),
-                self::callback(fn($argument) => $argument instanceof Direction
+                self::callback(fn($argument): bool => $argument instanceof Direction
                     && $argument === Direction::INCOMING)
             )
             ->willReturn(4);
         $followStorage->expects(self::once())
             ->method('list')
             ->with(
-                self::callback(fn($argument) => $argument instanceof LocalActorInterface
+                self::callback(fn($argument): bool => $argument instanceof LocalActorInterface
                     && $argument->getUsername() === 'person'),
-                self::callback(fn($argument) => $argument instanceof Direction
+                self::callback(fn($argument): bool => $argument instanceof Direction
                     && $argument === Direction::INCOMING)
             )
             ->willReturn([

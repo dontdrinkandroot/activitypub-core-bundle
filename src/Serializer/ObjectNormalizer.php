@@ -5,20 +5,17 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Serializer;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Object\CustomObject;
+use Override;
 
 class ObjectNormalizer extends AbstractCoreTypeNormalizer
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     protected function supportsType(string $class): bool
     {
         return is_a($class, CoreObject::class, true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     protected function denormalizeCoreType(mixed $data, string $type, array $context): CoreType
     {
         if (CustomObject::class === $type) {
@@ -29,9 +26,6 @@ class ObjectNormalizer extends AbstractCoreTypeNormalizer
         return $this->populateFromData($instance, $data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSupportedTypes(?string $format): array
     {
         return [

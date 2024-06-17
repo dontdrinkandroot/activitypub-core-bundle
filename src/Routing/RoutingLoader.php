@@ -2,9 +2,9 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Routing;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\GetAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\FollowersAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\FollowingAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\GetAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Inbox\GetAction as InboxGetAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Inbox\PostAction as InboxPostAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox\GetAction as OutboxGetAction;
@@ -12,6 +12,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox\PostAction as
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\SharedInboxAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\WebfingerAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\RouteName as RouteName;
+use Override;
 use RuntimeException;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
@@ -27,17 +28,13 @@ class RoutingLoader extends Loader
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supports(mixed $resource, string $type = null): bool
     {
         return 'ddr_activitypub_core' === $type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function load(mixed $resource, string $type = null): RouteCollection
     {
         if (true === $this->loaded) {

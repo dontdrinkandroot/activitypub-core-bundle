@@ -73,7 +73,10 @@ JSON;
             ->method('resolveTyped')
             ->with(self::uriMatcher('https://mastodon.localdomain/users/test'), Actor::class)
             ->willReturnCallback(
-                function (Uri $uri, string $type) use ($signActorId, $keyPair) {
+                function (Uri $uri, string $type) use (
+                    $signActorId,
+                    $keyPair
+                ): Actor {
                     $actor = new Actor(ActorType::PERSON);
                     $actor->id = $signActorId;
                     $actor->inbox = Uri::fromString('https://mastodon.localdomain/users/test/inbox');

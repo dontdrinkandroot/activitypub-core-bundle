@@ -5,6 +5,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\IntransitiveActivity;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObjectsCollection;
+use Override;
 
 class Question extends IntransitiveActivity
 {
@@ -14,9 +15,7 @@ class Question extends IntransitiveActivity
 
     public ?LinkableObject $closed = null; // TODO: Object | Link | xsd:dateTime | xsd:boolean
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getType(): string
     {
         return IntransitiveActivityType::QUESTION->value;

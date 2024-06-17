@@ -3,23 +3,20 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Serializer;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\JsonLdContext;
+use Override;
 use RuntimeException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ContextNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
         return JsonLdContext::class === $type && ActivityStreamEncoder::FORMAT === $format;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): JsonLdContext
     {
         if (is_string($data)) {
@@ -45,17 +42,13 @@ class ContextNormalizer implements NormalizerInterface, DenormalizerInterface
         throw new RuntimeException('Invalid JsonLdContext ' . gettype($data));
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return $data instanceof JsonLdContext && ActivityStreamEncoder::FORMAT === $format;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function normalize(mixed $object, string $format = null, array $context = []): string|array
     {
         assert($object instanceof JsonLdContext);
@@ -80,9 +73,6 @@ class ContextNormalizer implements NormalizerInterface, DenormalizerInterface
         return (array)$value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSupportedTypes(?string $format): array
     {
         return [

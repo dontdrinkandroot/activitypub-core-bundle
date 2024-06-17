@@ -2,11 +2,11 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Object;
 
+use Override;
+
 class Audio extends Document
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getType(): string
     {
         return ObjectType::AUDIO->value;

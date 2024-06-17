@@ -4,14 +4,13 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Serializer;
 
 use DateTime;
 use DateTimeInterface;
+use Override;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class DateTimeNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
         return $format === ActivityStreamEncoder::FORMAT
@@ -19,9 +18,7 @@ class DateTimeNormalizer implements NormalizerInterface, DenormalizerInterface
             && is_a($type, DateTimeInterface::class, true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function denormalize(
         mixed $data,
         string $type,
@@ -31,18 +28,14 @@ class DateTimeNormalizer implements NormalizerInterface, DenormalizerInterface
         return new DateTime($data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return $format === ActivityStreamEncoder::FORMAT
             && $data instanceof DateTimeInterface;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function normalize(mixed $object, string $format = null, array $context = []): string
     {
         $dateTime = $object;
@@ -54,9 +47,6 @@ class DateTimeNormalizer implements NormalizerInterface, DenormalizerInterface
         return $dateTime->format('Y-m-d\TH:i:sP');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSupportedTypes(?string $format): array
     {
         return [

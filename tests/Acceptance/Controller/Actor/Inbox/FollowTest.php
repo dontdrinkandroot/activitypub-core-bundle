@@ -59,11 +59,11 @@ JSON;
             ->expects(self::once())
             ->method('add')
             ->with(
-                self::callback(fn($argument) => $argument instanceof LocalActorInterface
+                self::callback(fn($argument): bool => $argument instanceof LocalActorInterface
                     && $argument->getUsername() === 'service'),
-                self::callback(fn($argument) => $argument instanceof Uri
+                self::callback(fn($argument): bool => $argument instanceof Uri
                     && $argument->__toString() === 'https://localhost/@person'),
-                self::callback(fn($argument) => $argument instanceof Direction
+                self::callback(fn($argument): bool => $argument instanceof Direction
                     && $argument === Direction::INCOMING)
             );
         self::getContainer()->set(FollowStorageInterface::class, $followStorageMock);
@@ -126,11 +126,11 @@ JSON;
             ->expects(self::once())
             ->method('accept')
             ->with(
-                self::callback(fn($argument) => $argument instanceof LocalActorInterface
+                self::callback(fn($argument): bool => $argument instanceof LocalActorInterface
                     && $argument->getUsername() === 'service'),
-                self::callback(fn($argument) => $argument instanceof Uri
+                self::callback(fn($argument): bool => $argument instanceof Uri
                     && $argument->__toString() === 'https://localhost/@person'),
-                self::callback(fn($argument) => $argument instanceof Direction
+                self::callback(fn($argument): bool => $argument instanceof Direction
                     && $argument === Direction::OUTGOING)
             );
         self::getContainer()->set(FollowStorageInterface::class, $followStorageMock);
@@ -173,11 +173,11 @@ JSON;
             ->expects(self::once())
             ->method('remove')
             ->with(
-                self::callback(fn($argument) => $argument instanceof LocalActorInterface
+                self::callback(fn($argument): bool => $argument instanceof LocalActorInterface
                     && $argument->getUsername() === 'service'),
-                self::callback(fn($argument) => $argument instanceof Uri
+                self::callback(fn($argument): bool => $argument instanceof Uri
                     && $argument->__toString() === 'https://localhost/@person'),
-                self::callback(fn($argument) => $argument instanceof Direction
+                self::callback(fn($argument): bool => $argument instanceof Direction
                     && $argument === Direction::INCOMING)
             );
         self::getContainer()->set(FollowStorageInterface::class, $followStorageMock);

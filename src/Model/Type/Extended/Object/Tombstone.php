@@ -4,6 +4,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Object;
 
 use DateTimeInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
+use Override;
 
 class Tombstone extends CoreObject
 {
@@ -11,9 +12,7 @@ class Tombstone extends CoreObject
 
     public ?DateTimeInterface $deleted = null;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getType(): string
     {
         return ObjectType::TOMBSTONE->value;

@@ -15,6 +15,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureGeneratorI
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureTools;
 use Dontdrinkandroot\Common\Asserted;
 use JsonException;
+use Override;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -31,9 +32,7 @@ class ActivityPubClient implements ActivityPubClientInterface
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function request(
         string $method,
         Uri $uri,
@@ -108,7 +107,7 @@ class ActivityPubClient implements ActivityPubClientInterface
                     json_decode($content, false, 512, JSON_THROW_ON_ERROR),
                     JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
                 );
-        } catch (JsonException $e) {
+        } catch (JsonException) {
             return $content;
         }
     }

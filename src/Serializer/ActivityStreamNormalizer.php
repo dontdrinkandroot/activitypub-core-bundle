@@ -3,6 +3,7 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Serializer;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
+use Override;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
 
@@ -10,15 +11,13 @@ class ActivityStreamNormalizer implements SerializerAwareInterface, Denormalizer
 {
     use SerializerAwareTrait;
 
-    public const NAMESPACE = 'https://www.w3.org/ns/activitystreams';
+    public const string NAMESPACE = 'https://www.w3.org/ns/activitystreams';
 
     public function __construct(private readonly TypeClassRegistry $typeClassRegistry)
     {
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
         return CoreType::class === $type
@@ -31,18 +30,13 @@ class ActivityStreamNormalizer implements SerializerAwareInterface, Denormalizer
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): CoreType
     {
         $class = $this->typeClassRegistry->getClass($data->type);
         return $this->getSerializer()->denormalize($data, $class, $format, $context);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSupportedTypes(?string $format): array
     {
         return [

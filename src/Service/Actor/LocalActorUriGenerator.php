@@ -6,6 +6,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\RouteName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\Common\Asserted;
+use Override;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
@@ -19,9 +20,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function generateId(LocalActorInterface|string $usernameOrLocalActor): Uri
     {
         $this->urlMatcher->getContext()->setHost($this->host);
@@ -36,9 +35,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function generateSharedInbox(): Uri
     {
         $this->urlMatcher->getContext()->setHost($this->host);
@@ -52,9 +49,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function generateInbox(LocalActorInterface|string $usernameOrLocalActor): Uri
     {
         $this->urlMatcher->getContext()->setHost($this->host);
@@ -69,9 +64,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function generateOutbox(LocalActorInterface|string $usernameOrLocalActor): Uri
     {
         $this->urlMatcher->getContext()->setHost($this->host);
@@ -86,9 +79,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function generateFollowers(LocalActorInterface|string $usernameOrLocalActor, ?int $page = null): Uri
     {
         $this->urlMatcher->getContext()->setHost($this->host);
@@ -107,9 +98,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function generateFollowing(LocalActorInterface|string $usernameOrLocalActor, ?int $page = null): Uri
     {
         $this->urlMatcher->getContext()->setHost($this->host);
@@ -128,9 +117,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function matchUsername(Uri $uri): ?string
     {
         if ($uri->host !== $this->host) {
@@ -141,7 +128,7 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
 
         try {
             $parameters = $this->urlMatcher->match(Asserted::notNull($uri->getPathWithQueryAndFragment()));
-        } catch (ResourceNotFoundException $e) {
+        } catch (ResourceNotFoundException) {
             return null;
         }
 

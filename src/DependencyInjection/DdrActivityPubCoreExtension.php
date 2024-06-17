@@ -6,6 +6,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\ParamName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowResponseMode;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectProviderInterface;
+use Override;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -14,10 +15,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class DdrActivityPubCoreExtension extends Extension implements PrependExtensionInterface
 {
-
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
@@ -41,9 +39,7 @@ class DdrActivityPubCoreExtension extends Extension implements PrependExtensionI
         $loader->load('inbox_listeners.php');
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function prepend(ContainerBuilder $container): void
     {
         $container->prependExtensionConfig(

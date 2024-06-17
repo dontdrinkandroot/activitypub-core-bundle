@@ -2,15 +2,14 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Serializer;
 
+use Override;
 use RuntimeException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ScalarNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
         return (
@@ -22,9 +21,7 @@ class ScalarNormalizer implements NormalizerInterface, DenormalizerInterface
             && is_scalar($data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): mixed
     {
         return match ($type) {
@@ -36,25 +33,18 @@ class ScalarNormalizer implements NormalizerInterface, DenormalizerInterface
         };
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return is_scalar($data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function normalize(mixed $object, string $format = null, array $context = []): mixed
     {
         return $object;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSupportedTypes(?string $format): array
     {
         return [

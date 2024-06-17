@@ -6,6 +6,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\JsonLdContext;
 use Dontdrinkandroot\Common\Asserted;
+use Override;
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionProperty;
@@ -22,9 +23,7 @@ abstract class AbstractCoreTypeNormalizer
     {
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
         return is_a($type, CoreType::class, true)
@@ -33,29 +32,23 @@ abstract class AbstractCoreTypeNormalizer
             && $format === ActivityStreamEncoder::FORMAT;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): CoreType
     {
         assert(is_a($type, CoreType::class, true));
         return $this->denormalizeCoreType($data, $type, $context);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return is_object($data)
             && is_a($data, CoreType::class)
-            && $this->supportsType(get_class($data))
+            && $this->supportsType($data::class)
             && $format === ActivityStreamEncoder::FORMAT;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function normalize(mixed $object, string $format = null, array $context = []): array|string
     {
         return $this->normalizeCoreType($object);
@@ -160,7 +153,6 @@ abstract class AbstractCoreTypeNormalizer
     }
 
     /**
-     * @param mixed $data
      * @param class-string<CoreType> $type
      * @param array $context
      * @return CoreType
