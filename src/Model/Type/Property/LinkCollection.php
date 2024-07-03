@@ -14,4 +14,18 @@ class LinkCollection extends ArrayObject
     {
         return 1 === $this->count();
     }
+
+    public static function create(Link|Uri|string...$links): self
+    {
+        $convertedLinks = [];
+        foreach ($links as $link) {
+            $convertedLinks[] = match (true) {
+                $link instanceof Link => $link,
+                $link instanceof Uri => Link::fromUri($link),
+                is_string($link) => Link::fromUriString($link),
+            };
+        }
+
+        return new self($convertedLinks);
+    }
 }

@@ -35,6 +35,11 @@ class Link extends CoreType
         return $link;
     }
 
+    public static function fromUriString(string $uri): Link
+    {
+        return static::fromUri(Uri::fromString($uri));
+    }
+
     #[Override]
     public function getType(): string
     {

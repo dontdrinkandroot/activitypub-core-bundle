@@ -93,6 +93,11 @@ class CoreObject extends CoreType
         return null !== $this->id;
     }
 
+    public function setUrls(Link|Uri|string...$links): void
+    {
+        $this->url = LinkCollection::create(...$links);
+    }
+
     public function setIcons(Link|Image|LinkableImage ...$icons): void
     {
         $collection = new LinkableImagesCollection();
@@ -105,6 +110,7 @@ class CoreObject extends CoreType
                 }
             );
         }
+        $this->icon = $collection;
     }
 
     public function setImages(Link|Image|LinkableImage ...$images): void
@@ -119,5 +125,6 @@ class CoreObject extends CoreType
                 }
             );
         }
+        $this->image = $collection;
     }
 }
