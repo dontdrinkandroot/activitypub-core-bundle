@@ -4,7 +4,9 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core;
 
 use DateTimeInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Object\Image;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Object\ObjectType;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableImage;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableImagesCollection;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObjectsCollection;
@@ -37,6 +39,8 @@ class CoreObject extends CoreType
     public ?LinkableObject $generator = null;
 
     public ?LinkableImagesCollection $icon = null;
+
+    public ?LinkableImagesCollection $image = null;
 
     public ?LinkableObject $inReplyTo = null;
 
@@ -87,5 +91,33 @@ class CoreObject extends CoreType
     public function hasId(): bool
     {
         return null !== $this->id;
+    }
+
+    public function setIcons(Link|Image|LinkableImage ...$icons): void
+    {
+        $collection = new LinkableImagesCollection();
+        foreach ($icons as $icon) {
+            $collection->append(
+                match (true) {
+                    $icon instanceof Link => new LinkableImage(link: $icon),
+                    $icon instanceof Image => new LinkableImage(object: $icon),
+                    default => $icon,
+                }
+            );
+        }
+    }
+
+    public function setImages(Link|Image|LinkableImage ...$images): void
+    {
+        $collection = new LinkableImagesCollection();
+        foreach ($images as $image) {
+            $collection->append(
+                match (true) {
+                    $image instanceof Link => new LinkableImage(link: $image),
+                    $image instanceof Image => new LinkableImage(object: $image),
+                    default => $image,
+                }
+            );
+        }
     }
 }

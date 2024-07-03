@@ -12,14 +12,9 @@ trait SerializationTestTrait
     {
         $serializer = self::getService(SerializerInterface::class);
 
-        return json_decode(
-            $serializer->serialize(
-                $serializer->deserialize($json, CoreType::class, ActivityStreamEncoder::FORMAT),
-                ActivityStreamEncoder::FORMAT
-            ),
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
+        $coreType = $serializer->deserialize($json, CoreType::class, ActivityStreamEncoder::FORMAT);
+        $restoredJson = $serializer->serialize($coreType, ActivityStreamEncoder::FORMAT);
+
+        return json_decode($restoredJson, true, 512, JSON_THROW_ON_ERROR);
     }
 }
