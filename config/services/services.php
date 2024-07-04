@@ -15,6 +15,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Controller\WebfingerAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener\ResponseForFormatListener;
 use Dontdrinkandroot\ActivityPubCoreBundle\Routing\RoutingLoader;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\TypeClassRegistry;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorPopulator;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorUriGenerator;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorUriGeneratorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Client\ActivityPubClient;
@@ -90,6 +91,12 @@ return function (ContainerConfigurator $configurator): void {
             param(ParamName::HOST)
         ]);
     $services->alias(LocalActorUriGeneratorInterface::class, LocalActorUriGenerator::class);
+
+    $services->set(LocalActorPopulator::class)
+        ->args([
+            service(LocalActorUriGeneratorInterface::class),
+            service(TypeClassRegistry::class)
+        ]);
 
     $services->set(CachedWebFingerService::class)
         ->args([

@@ -39,6 +39,11 @@ class GetActionTest extends WebTestCase
             'outbox' => 'https://localhost/@person/outbox',
             'preferredUsername' => 'person',
             'id' => 'https://localhost/@person',
+            'following' => 'https://localhost/@person/following',
+            'followers' => 'https://localhost/@person/followers',
+            'endpoints' => [
+                'sharedInbox' => 'https://localhost/inbox'
+            ]
         ], $data);
     }
 }

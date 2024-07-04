@@ -5,11 +5,10 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\SignKey;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Actor;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Person;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Service;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\JsonLdContext;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\ActorType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\PublicKey;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorPopulator;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorUriGeneratorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Model\StaticLocalActor;
@@ -105,6 +104,7 @@ PEM
     ];
 
     public function __construct(
+        private readonly LocalActorPopulator $localActorPopulator,
         private readonly LocalActorUriGeneratorInterface $localActorUriGenerator,
     ) {
     }
@@ -150,16 +150,13 @@ PEM
     public function toActivityPubActor(LocalActorInterface $localActor): Actor
     {
         $username = $localActor->getUsername();
-        $actor = match ($username) {
-            'person' => new Person(),
-            'service' => new Service(),
+        $actorType = match ($username) {
+            'person' => ActorType::PERSON,
+            'service' => ActorType::SERVICE,
             default => throw new RuntimeException('Unknown username: ' . $username)
         };
-        $actor->jsonLdContext = new JsonLdContext(['https://w3id.org/security/v1']);
-        $actor->id = $this->localActorUriGenerator->generateId($username);
-        $actor->inbox = $this->localActorUriGenerator->generateInbox($username);
-        $actor->outbox = $this->localActorUriGenerator->generateOutbox($username);
-        $actor->preferredUsername = $username;
+
+        $actor = $this->localActorPopulator->populate($localActor, $actorType);
         $actor->publicKey = new PublicKey(
             id: $actor->getId()->withFragment('main-key'),
             owner: $actor->getId(),

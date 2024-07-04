@@ -146,5 +146,4 @@ class LocalActorUriGenerator implements LocalActorUriGeneratorInterface
         }
         return $usernameOrLocalActor->getUsername();
     }
-
 }

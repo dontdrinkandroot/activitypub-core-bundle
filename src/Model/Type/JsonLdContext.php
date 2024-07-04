@@ -42,4 +42,8 @@ class JsonLdContext
     {
     }
 
+    public function add(string|object $value): void
+    {
+        $this->values[] = $value;
+    }
 }
