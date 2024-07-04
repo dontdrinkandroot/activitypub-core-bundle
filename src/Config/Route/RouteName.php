@@ -1,11 +1,11 @@
 <?php
 
-namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Container;
+namespace Dontdrinkandroot\ActivityPubCoreBundle\Config\Route;
 
 class RouteName
 {
     public const string DDR_ACTIVITYPUB_PREFIX = 'ddr.activity_pub.';
-    public const string  CORE_PREFIX = self::DDR_ACTIVITYPUB_PREFIX . 'core.';
+    public const string CORE_PREFIX = self::DDR_ACTIVITYPUB_PREFIX . 'core.';
 
     public const string WEBFINGER = self::CORE_PREFIX . 'webfinger';
     public const string POST_SHARED_INBOX = self::CORE_PREFIX . 'shared_inbox.post';

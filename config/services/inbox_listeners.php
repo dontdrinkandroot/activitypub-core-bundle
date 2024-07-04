@@ -2,13 +2,13 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Config\Services;
 
+use Dontdrinkandroot\ActivityPubCoreBundle\Config\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Event\InboxEvent;
 use Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener\Inbox\AcceptFollowListener;
 use Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener\Inbox\FollowListener;
 use Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener\Inbox\InteractionListener;
 use Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener\Inbox\RejectFollowListener;
 use Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener\Inbox\UndoFollowInboxHandler;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowStorageInterface;

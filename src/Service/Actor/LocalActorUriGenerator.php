@@ -2,7 +2,7 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\RouteName;
+use Dontdrinkandroot\ActivityPubCoreBundle\Config\Route\RouteName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\LocalActorInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 use Dontdrinkandroot\Common\Asserted;

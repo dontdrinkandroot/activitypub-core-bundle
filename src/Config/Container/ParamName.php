@@ -1,6 +1,6 @@
 <?php
 
-namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Container;
+namespace Dontdrinkandroot\ActivityPubCoreBundle\Config\Container;
 
 class ParamName
 {

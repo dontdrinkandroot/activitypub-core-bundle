@@ -2,6 +2,8 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Config\Services;
 
+use Dontdrinkandroot\ActivityPubCoreBundle\Config\Container\ParamName;
+use Dontdrinkandroot\ActivityPubCoreBundle\Config\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\FollowersAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\GetAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Inbox\GetAction as InboxGetAction;
@@ -11,8 +13,6 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox\PostAction as
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\SharedInboxAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\WebfingerAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener\ResponseForFormatListener;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\ParamName;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Routing\RoutingLoader;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\TypeClassRegistry;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorUriGenerator;

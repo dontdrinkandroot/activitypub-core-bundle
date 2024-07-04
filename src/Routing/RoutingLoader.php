@@ -2,6 +2,7 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Routing;
 
+use Dontdrinkandroot\ActivityPubCoreBundle\Config\Route\RouteName as RouteName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\FollowersAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\FollowingAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\GetAction;
@@ -11,7 +12,6 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox\GetAction as 
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox\PostAction as OutboxPostAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\SharedInboxAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\WebfingerAction;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\RouteName as RouteName;
 use Override;
 use RuntimeException;
 use Symfony\Component\Config\Loader\Loader;

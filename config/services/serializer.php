@@ -2,7 +2,7 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Config\Services;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\TagName;
+use Dontdrinkandroot\ActivityPubCoreBundle\Config\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ActivityStreamEncoder;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ActivityStreamNormalizer;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ContextNormalizer;

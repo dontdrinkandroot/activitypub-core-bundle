@@ -2,7 +2,7 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Config;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\TagName;
+use Dontdrinkandroot\ActivityPubCoreBundle\Config\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Delivery\DeliveryServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowService;

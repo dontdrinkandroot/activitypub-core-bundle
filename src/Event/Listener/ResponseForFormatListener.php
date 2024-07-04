@@ -2,7 +2,7 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\RouteName;
+use Dontdrinkandroot\ActivityPubCoreBundle\Config\Route\RouteName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ActivityStreamEncoder;
 use Symfony\Component\HttpFoundation\Response;

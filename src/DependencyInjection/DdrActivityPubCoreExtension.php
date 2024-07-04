@@ -2,8 +2,8 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\DependencyInjection;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\ParamName;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\Container\TagName;
+use Dontdrinkandroot\ActivityPubCoreBundle\Config\Container\ParamName;
+use Dontdrinkandroot\ActivityPubCoreBundle\Config\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowResponseMode;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectProviderInterface;
 use Override;
