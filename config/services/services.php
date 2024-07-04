@@ -5,6 +5,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\Config\Services;
 use Dontdrinkandroot\ActivityPubCoreBundle\Config\Container\ParamName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Config\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\FollowersAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\FollowingAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\GetAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Inbox\GetAction as InboxGetAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Inbox\PostAction as InboxPostAction;
@@ -171,6 +172,12 @@ return function (ContainerConfigurator $configurator): void {
 
     $services
         ->set(FollowersAction::class)
+        ->autowire()
+        ->autoconfigure()
+        ->tag(TagName::CONTROLLER);
+
+    $services
+        ->set(FollowingAction::class)
         ->autowire()
         ->autoconfigure()
         ->tag(TagName::CONTROLLER);
