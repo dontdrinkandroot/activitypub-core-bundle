@@ -36,7 +36,7 @@ return function (ContainerConfigurator $configurator): void {
 
     $services->alias(HttpClientInterface::class, KernelBrowserHttpClient::class);
     $services->set(MockObjectProvider::class)
-        ->tag(TagName::OBJECT_PROVIDER)
+        ->tag(TagName::DDR_ACTIVITY_PUB_OBJECT_PROVIDER)
         ->public();
 
     $services->alias(LocalActorServiceInterface::class, LocalActorService::class);

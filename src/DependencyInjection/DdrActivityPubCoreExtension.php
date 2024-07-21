@@ -5,6 +5,7 @@ namespace Dontdrinkandroot\ActivityPubCoreBundle\DependencyInjection;
 use Dontdrinkandroot\ActivityPubCoreBundle\Config\Container\ParamName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Config\Container\TagName;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowResponseMode;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\Handler\InboxHandlerInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectProviderInterface;
 use Override;
 use Symfony\Component\Config\FileLocator;
@@ -23,7 +24,11 @@ class DdrActivityPubCoreExtension extends Extension implements PrependExtensionI
 
         $container
             ->registerForAutoconfiguration(ObjectProviderInterface::class)
-            ->addTag(TagName::OBJECT_PROVIDER);
+            ->addTag(TagName::DDR_ACTIVITY_PUB_OBJECT_PROVIDER);
+
+        $container
+            ->registerForAutoconfiguration(InboxHandlerInterface::class)
+            ->addTag(TagName::DDR_ACTIVITY_PUB_INBOX_HANDLER);
 
         $container->setParameter(ParamName::HOST, $config['host']);
         $container->setParameter(ParamName::ACTOR_PATH_PREFIX, $config['actor_path_prefix']);
@@ -36,7 +41,7 @@ class DdrActivityPubCoreExtension extends Extension implements PrependExtensionI
         $loader->load('services.php');
         $loader->load('types.php');
         $loader->load('serializer.php');
-        $loader->load('inbox_listeners.php');
+        $loader->load('inbox_handlers.php');
     }
 
     #[Override]

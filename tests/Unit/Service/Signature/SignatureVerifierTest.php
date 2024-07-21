@@ -50,6 +50,6 @@ JSON;
             ],
             content: $body
         );
-        self::assertTrue($signatureService->verifyRequest($request));
+        self::assertTrue($signatureService->verify($request));
     }
 }

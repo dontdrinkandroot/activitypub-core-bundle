@@ -13,6 +13,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox\GetAction as 
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Outbox\PostAction as OutboxPostAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\SharedInboxAction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Controller\WebfingerAction;
+use Dontdrinkandroot\ActivityPubCoreBundle\DataCollector\ActivityPubDataCollector;
 use Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener\ResponseForFormatListener;
 use Dontdrinkandroot\ActivityPubCoreBundle\Routing\RoutingLoader;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\TypeClassRegistry;
@@ -110,11 +111,11 @@ return function (ContainerConfigurator $configurator): void {
         ->args([
             service(ActivityPubClientInterface::class),
         ])
-        ->tag(TagName::OBJECT_PROVIDER, ['priority' => -256]);
+        ->tag(TagName::DDR_ACTIVITY_PUB_OBJECT_PROVIDER, ['priority' => -256]);
 
     $services->set(ObjectResolver::class)
         ->args([
-            tagged_iterator(TagName::OBJECT_PROVIDER)
+            tagged_iterator(TagName::DDR_ACTIVITY_PUB_OBJECT_PROVIDER)
         ]);
     $services->alias(ObjectResolverInterface::class, ObjectResolver::class);
 
@@ -137,7 +138,9 @@ return function (ContainerConfigurator $configurator): void {
         ->set(SharedInboxAction::class)
         ->autowire()
         ->autoconfigure()
-        ->tag(TagName::CONTROLLER);
+        ->arg('$inboxHandlers', tagged_iterator(TagName::DDR_ACTIVITY_PUB_INBOX_HANDLER))
+        ->tag(TagName::CONTROLLER)
+        ->tag(TagName::MONOLOG_LOGGER, ['channel' => 'activitypub']);
 
     $services
         ->set(GetAction::class)
@@ -155,6 +158,7 @@ return function (ContainerConfigurator $configurator): void {
         ->set(InboxPostAction::class)
         ->autowire()
         ->autoconfigure()
+        ->arg('$inboxHandlers', tagged_iterator(TagName::DDR_ACTIVITY_PUB_INBOX_HANDLER))
         ->tag(TagName::CONTROLLER)
         ->tag(TagName::MONOLOG_LOGGER, ['channel' => 'activitypub']);
 
@@ -181,4 +185,8 @@ return function (ContainerConfigurator $configurator): void {
         ->autowire()
         ->autoconfigure()
         ->tag(TagName::CONTROLLER);
+
+    $services
+        ->set(ActivityPubDataCollector::class)
+        ->tag(TagName::DATA_COLLECTOR, ['id' => ActivityPubDataCollector::class]);
 };

@@ -3,10 +3,13 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Controller\Actor\Inbox;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Event\InboxEvent;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\ActivityPubRequest;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\ActivityPubResponse;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\AbstractActivity;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ActivityStreamEncoder;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\Handler\InboxHandlerInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureVerifierInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
@@ -18,11 +21,15 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class PostAction extends AbstractController
 {
+    /**
+     * @param iterable<InboxHandlerInterface> $inboxHandlers
+     */
     public function __construct(
         private readonly SignatureVerifierInterface $signatureVerifier,
         private readonly SerializerInterface $serializer,
         private readonly LocalActorServiceInterface $localActorService,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private iterable $inboxHandlers,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -48,16 +55,18 @@ class PostAction extends AbstractController
 
         if (!$coreType instanceof AbstractActivity) {
             $this->logger->warning('Inbox: Not an Activity', ['username' => $username, 'type' => $coreType::class]);
-
             return new JsonResponse(
-                data: ['error' => 'Not an Activity'],
+                data: [
+                    '@type' => 'Error',
+                    'message' => 'Not an Activity: ' . $coreType->getType()
+                ],
                 status: Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
 
-        $inboxEvent = new InboxEvent($request, $coreType, $this->signatureVerifier, $localActor);
-        $this->eventDispatcher->dispatch($inboxEvent);
-        if (null !== ($response = $inboxEvent->getResponse())) {
+        $activityPubRequest = new ActivityPubRequest($request, $coreType, $localActor);
+        $response = $this->handle($activityPubRequest);
+        if (null !== $response) {
             return $response;
         }
 
@@ -69,5 +78,17 @@ class PostAction extends AbstractController
             data: ['error' => 'No handler found for ' . $coreType->getType()],
             status: Response::HTTP_NOT_IMPLEMENTED
         );
+    }
+
+    private function handle(ActivityPubRequest $activityPubRequest): ?ActivityPubResponse
+    {
+        foreach ($this->inboxHandlers as $inboxHandler) {
+            $response = $inboxHandler->handle($activityPubRequest);
+            if (null !== $response) {
+                return $response;
+            }
+        }
+
+        return null;
     }
 }

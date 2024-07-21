@@ -3,13 +3,15 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Tests\Unit\Service\Signature;
 
 use DateTime;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\ActivityPubRequest;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Header;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\SignKey;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\AbstractActivity;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Create;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Actor;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\ActorType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\PublicKey;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\PublicKeyResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\KeyPairGenerator;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureGenerator;
@@ -104,6 +106,7 @@ JSON;
             ],
             content: $body
         );
-        $signatureVerifier->verifyRequest($request);
+        $activityPubRequest = new ActivityPubRequest($request, new Create());
+        $signatureVerifier->verify($activityPubRequest);
     }
 }

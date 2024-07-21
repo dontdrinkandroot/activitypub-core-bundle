@@ -40,7 +40,7 @@ class InboxEvent extends Event
     public function verify(): Actor
     {
         if (!$this->verified) {
-            $this->signActor = $this->signatureVerifier->verifyRequest($this->request);
+            $this->signActor = $this->signatureVerifier->verify($this->request);
             $this->verified = true;
         }
 

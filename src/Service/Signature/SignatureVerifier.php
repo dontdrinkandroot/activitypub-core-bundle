@@ -3,11 +3,11 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature;
 
 use DateTime;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\ActivityPubRequest;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Header;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\SignatureVerificationException;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Actor;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
-use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\PublicKeyResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Dontdrinkandroot\Common\Asserted;
 use Override;
@@ -22,13 +22,18 @@ class SignatureVerifier implements SignatureVerifierInterface
     }
 
     #[Override]
-    public function verifyRequest(Request $request): Actor
+    public function verify(ActivityPubRequest $request): Actor
     {
-        $signatureHeader = $request->headers->get(Header::SIGNATURE)
+        if ($request->isVerified()) {
+            return Asserted::notNull($request->getSignActor());
+        }
+
+        $httpRequest = $request->request;
+        $signatureHeader = $httpRequest->headers->get(Header::SIGNATURE)
             ?? throw new SignatureVerificationException('Missing Signature Header');
 
-        $this->verifyDateNotExpired($request);
-        $this->verifyDigestMatching($request);
+        $this->verifyDateNotExpired($httpRequest);
+        $this->verifyDigestMatching($httpRequest);
 
         $signatureParts = $this->parseSignatureHeader($signatureHeader);
         $keyId = Uri::fromString($signatureParts['keyId']);
@@ -43,11 +48,11 @@ class SignatureVerifier implements SignatureVerifierInterface
         // TODO: Make sure all required headers are present
         $signHeaderNames = explode(' ', (string)$signatureParts['headers']);
 
-        $headers = $this->getRequestHeaders($request);
+        $headers = $this->getRequestHeaders($httpRequest);
         $headers[Header::REQUEST_TARGET] = sprintf(
             '%s %s',
-            strtolower($request->getMethod()),
-            $request->getPathInfo()
+            strtolower($httpRequest->getMethod()),
+            $httpRequest->getPathInfo()
         );
         $signatureString = SignatureTools::buildSignatureString($signHeaderNames, $headers);
 
@@ -62,6 +67,8 @@ class SignatureVerifier implements SignatureVerifierInterface
         if (true !== $verificationResult) {
             throw new SignatureVerificationException('Signature Verification Failed');
         }
+
+        $request->setVerified($actor);
 
         return $actor;
     }
