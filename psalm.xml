@@ -21,6 +21,7 @@
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
                 <referencedProperty name="Symfony\Bundle\FrameworkBundle\Controller\AbstractController::$container"/>
+                <referencedProperty name="Symfony\Component\HttpFoundation\Response::$charset"/>
             </errorLevel>
         </PropertyNotSetInConstructor>
         <!-- TODO: Remove this when resolved-->

@@ -6,7 +6,7 @@ use Override;
 use Symfony\Bundle\FrameworkBundle\DataCollector\AbstractDataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Symfony\Component\VarDumper\Cloner\Data;
 use Throwable;
 
 class ActivityPubDataCollector extends AbstractDataCollector
@@ -25,7 +25,7 @@ class ActivityPubDataCollector extends AbstractDataCollector
     }
 
     // TODO: Remove
-    public function getData(): array
+    public function getData(): Data|array
     {
         return $this->data;
     }
