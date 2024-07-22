@@ -2,8 +2,8 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\Handler;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\ActivityPubRequest;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\ActivityPubResponse;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Request\ActivityPubRequest;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Response\ActivityPubResponse;
 
 interface InboxHandlerInterface
 {

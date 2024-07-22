@@ -3,7 +3,7 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature;
 
 use DateTime;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\ActivityPubRequest;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Request\ActivityPubRequest;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Header;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\SignatureVerificationException;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Actor;

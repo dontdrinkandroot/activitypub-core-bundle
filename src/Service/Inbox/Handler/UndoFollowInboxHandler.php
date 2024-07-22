@@ -3,8 +3,8 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\Handler;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Event\InboxEvent;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\ActivityPubRequest;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\ActivityPubResponse;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Request\ActivityPubRequest;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Response\ActivityPubResponse;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Direction;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Follow;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Undo;

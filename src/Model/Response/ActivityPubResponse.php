@@ -1,6 +1,6 @@
 <?php
 
-namespace Dontdrinkandroot\ActivityPubCoreBundle\Model;
+namespace Dontdrinkandroot\ActivityPubCoreBundle\Model\Response;
 
 use Symfony\Component\HttpFoundation\Response;
 

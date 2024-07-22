@@ -1,7 +1,7 @@
 {% extends '@WebProfiler/Profiler/layout.html.twig' %}
 
 {% block menu %}
-    <span class="label">
+    <span class="label {% if collector.data is empty %}disabled{% endif %}">
         <span class="icon">{{ source('@DdrActivityPubCore/logo_profiler.svg') }}</span>
         <strong>ActivityPub</strong>
     </span>
@@ -10,5 +10,30 @@
 {% block panel %}
     <h2>ActivityPub</h2>
 
-    {{ dump(collector.data) }}
+    {% set inbox = collector.inbox %}
+    {% if inbox is not null %}
+        <h3>Inbox</h3>
+
+        {#        We have username, content, handler and result properties of inbox #}
+        <table>
+            <tbody>
+            <tr>
+                <th>Username</th>
+{#                <td>{{ inbox.username }}</td>#}
+                <td>{% if inbox.username is not null %}{{ inbox.username }}{% else %}<span class="muted">Shared</span>{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Handler</th>
+                <td>{{ inbox.handler }}</td>
+            </tr>
+            <tr>
+                <th>Result</th>
+                <td>{{ inbox.result }}</td>
+            </tr>
+        </table>
+
+        <div class="card">
+            <pre class="break-long-words">{{ inbox.content|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+        </div>
+    {% endif %}
 {% endblock panel %}

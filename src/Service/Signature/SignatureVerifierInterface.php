@@ -2,7 +2,7 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\ActivityPubRequest;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\Request\ActivityPubRequest;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Actor\Actor;
 use Symfony\Component\HttpFoundation\Request;
 
