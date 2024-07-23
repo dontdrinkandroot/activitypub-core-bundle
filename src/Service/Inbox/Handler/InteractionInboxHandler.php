@@ -2,7 +2,6 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\Handler;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Event\InboxEvent;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Request\ActivityPubRequest;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Response\ActivityPubResponse;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Core\CoreObject;
@@ -10,6 +9,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Announce
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Dislike;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Like;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\InboxServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Share\InteractionServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureVerifierInterface;
@@ -22,7 +22,8 @@ class InteractionInboxHandler implements InboxHandlerInterface
         private readonly ObjectResolverInterface $objectResolver,
         private readonly InteractionServiceInterface $interactionService,
         private readonly LocalActorServiceInterface $localActorService,
-        private readonly SignatureVerifierInterface $signatureVerifier
+        private readonly SignatureVerifierInterface $signatureVerifier,
+        private readonly InboxServiceInterface $inboxService
     ) {
     }
 
@@ -68,6 +69,7 @@ class InteractionInboxHandler implements InboxHandlerInterface
                 $activityActorId,
                 $resolvedObject->getId()
             );
+            $this->inboxService->addItem($localActor, $activity);
         } else {
             // TODO: This is just a notification
         }

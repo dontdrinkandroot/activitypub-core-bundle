@@ -2,14 +2,14 @@
 
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\Handler;
 
-use Dontdrinkandroot\ActivityPubCoreBundle\Event\InboxEvent;
+use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowResponseType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Request\ActivityPubRequest;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Response\ActivityPubResponse;
-use Dontdrinkandroot\ActivityPubCoreBundle\Model\FollowResponseType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Follow;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Extended\Activity\Reject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowServiceInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\InboxServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureVerifierInterface;
 use Override;
@@ -21,7 +21,8 @@ class RejectFollowInboxHandler implements InboxHandlerInterface
         private readonly FollowServiceInterface $followService,
         private readonly ObjectResolverInterface $objectResolver,
         private readonly LocalActorServiceInterface $localActorService,
-        private readonly SignatureVerifierInterface $signatureVerifier
+        private readonly SignatureVerifierInterface $signatureVerifier,
+        private readonly InboxServiceInterface $inboxService
     ) {
     }
 
@@ -60,6 +61,7 @@ class RejectFollowInboxHandler implements InboxHandlerInterface
         }
 
         $this->followService->onFollowingResponse($localActor, $followObjectId, FollowResponseType::REJECTED);
+        $this->inboxService->addItem($localActor, $activity);
 
         return new ActivityPubResponse(Response::HTTP_ACCEPTED);
     }

@@ -8,8 +8,12 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Service\Delivery\DeliveryServiceInter
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowService;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowStorageInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\InboxServiceInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\InMemoryInboxService;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolver;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Outbox\InMemoryOutboxService;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Outbox\OutboxServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Share\InteractionServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\DeliveryService;
 use Dontdrinkandroot\ActivityPubCoreBundle\Tests\TestApp\Service\FollowStorage;
@@ -39,10 +43,15 @@ return function (ContainerConfigurator $configurator): void {
         ->tag(TagName::DDR_ACTIVITY_PUB_OBJECT_PROVIDER)
         ->public();
 
+    $services->set(InMemoryInboxService::class);
+    $services->set(InMemoryOutboxService::class);
+
     $services->alias(LocalActorServiceInterface::class, LocalActorService::class);
     $services->alias(FollowStorageInterface::class, FollowStorage::class)->public();
     $services->alias(DeliveryServiceInterface::class, DeliveryService::class);
     $services->alias(InteractionServiceInterface::class, InteractionService::class)->public();
     $services->alias(FollowServiceInterface::class, FollowService::class)->public();
     $services->alias(ObjectResolverInterface::class, ObjectResolver::class)->public();
+    $services->alias(InboxServiceInterface::class, InMemoryInboxService::class)->public();
+    $services->alias(OutboxServiceInterface::class, InMemoryOutboxService::class)->public();
 };

@@ -3,7 +3,6 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Config\Services;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Config\Container\TagName;
-use Dontdrinkandroot\ActivityPubCoreBundle\Event\InboxEvent;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Actor\LocalActorServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Follow\FollowStorageInterface;
@@ -12,6 +11,7 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\Handler\FollowInboxHand
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\Handler\InteractionInboxHandler;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\Handler\RejectFollowInboxHandler;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\Handler\UndoFollowInboxHandler;
+use Dontdrinkandroot\ActivityPubCoreBundle\Service\Inbox\InboxServiceInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Object\ObjectResolverInterface;
 use Dontdrinkandroot\ActivityPubCoreBundle\Service\Signature\SignatureVerifierInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -25,7 +25,8 @@ return function (ContainerConfigurator $configurator): void {
         ->args([
             service(LocalActorServiceInterface::class),
             service(FollowServiceInterface::class),
-            service(SignatureVerifierInterface::class)
+            service(SignatureVerifierInterface::class),
+            service(InboxServiceInterface::class)
         ])
         ->tag(TagName::DDR_ACTIVITY_PUB_INBOX_HANDLER);
 
@@ -34,7 +35,8 @@ return function (ContainerConfigurator $configurator): void {
             service(FollowServiceInterface::class),
             service(ObjectResolverInterface::class),
             service(LocalActorServiceInterface::class),
-            service(SignatureVerifierInterface::class)
+            service(SignatureVerifierInterface::class),
+            service(InboxServiceInterface::class)
         ])
         ->tag(TagName::DDR_ACTIVITY_PUB_INBOX_HANDLER);
 
@@ -43,7 +45,8 @@ return function (ContainerConfigurator $configurator): void {
             service(FollowServiceInterface::class),
             service(ObjectResolverInterface::class),
             service(LocalActorServiceInterface::class),
-            service(SignatureVerifierInterface::class)
+            service(SignatureVerifierInterface::class),
+            service(InboxServiceInterface::class)
         ])
         ->tag(TagName::DDR_ACTIVITY_PUB_INBOX_HANDLER);
 
@@ -52,7 +55,8 @@ return function (ContainerConfigurator $configurator): void {
             service(FollowStorageInterface::class),
             service(ObjectResolverInterface::class),
             service(LocalActorServiceInterface::class),
-            service(SignatureVerifierInterface::class)
+            service(SignatureVerifierInterface::class),
+            service(InboxServiceInterface::class)
         ])
         ->tag(TagName::DDR_ACTIVITY_PUB_INBOX_HANDLER);
 
