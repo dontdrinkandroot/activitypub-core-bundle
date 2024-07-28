@@ -65,7 +65,13 @@ class ActivityPubClient implements ActivityPubClientInterface
             );
         } catch (ClientExceptionInterface|ServerExceptionInterface $e) {
             $content = $this->formatJsonContent($response);
-            throw new ActivityPubClientException($content, $response->getStatusCode(), $e);
+            throw new ActivityPubClientException(
+                message: $content,
+                code: $response->getStatusCode(),
+                method: $method,
+                uri: (string)$uri,
+                previous: $e
+            );
         } catch (Throwable $e) {
             throw $e;
         }
