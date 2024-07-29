@@ -58,21 +58,22 @@ class InteractionInboxHandler implements InboxHandlerInterface
         }
 
         $localActor = $this->localActorService->findLocalActorByUri($attributedToId);
-        if (null === $this->localActorService->findLocalActorByUri($attributedToId)) {
+        if (null === $localActor) {
             return new ActivityPubResponse(Response::HTTP_BAD_REQUEST);
         }
 
-        if (null !== $localActor) {
-            $this->interactionService->incoming(
-                $activity->getId(),
-                $activity->getType(),
-                $activityActorId,
-                $resolvedObject->getId()
-            );
-            $this->inboxService->addItem($localActor, $activity);
-        } else {
-            // TODO: This is just a notification
-        }
+//        if (null !== $localActor) {
+//            $this->interactionService->incoming(
+//                $activity->getId(),
+//                $activity->getType(),
+//                $activityActorId,
+//                $resolvedObject->getId()
+//            );
+//            $this->inboxService->addItem($localActor, $activity);
+//        } else {
+//            // TODO: This is just a notification
+//        }
+        $this->inboxService->addItem($localActor, $activity);
 
         return new ActivityPubResponse(Response::HTTP_ACCEPTED);
     }

@@ -8,6 +8,9 @@ use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Linkable\LinkableObject;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\Property\Uri;
 
+/**
+ * Expands a LinkableObject or Uri to a CoreObject.
+ */
 interface ObjectResolverInterface
 {
     public function resolve(LinkableObject|Uri $object, ?SignKey $signKey = null): ?CoreObject;
