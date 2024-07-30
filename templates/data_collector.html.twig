@@ -36,4 +36,12 @@
             <pre class="break-long-words">{{ inbox.content|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
         </div>
     {% endif %}
+
+    {% if collector.responseJson is not null %}
+        <h3>Response</h3>
+        <div class="card">
+            <pre class="break-long-words">{{ collector.responseJson }}</pre>
+        </div>
+    {% endif %}
+
 {% endblock panel %}

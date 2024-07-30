@@ -3,6 +3,7 @@
 namespace Dontdrinkandroot\ActivityPubCoreBundle\Event\Listener;
 
 use Dontdrinkandroot\ActivityPubCoreBundle\Config\Route\RouteName;
+use Dontdrinkandroot\ActivityPubCoreBundle\DataCollector\ActivityPubDataCollector;
 use Dontdrinkandroot\ActivityPubCoreBundle\Model\Type\CoreType;
 use Dontdrinkandroot\ActivityPubCoreBundle\Serializer\ActivityStreamEncoder;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ class ResponseForFormatListener
 {
     public function __construct(
         private readonly SerializerInterface $serializer,
+        private readonly ActivityPubDataCollector $activityPubDataCollector
     ) {
     }
 
@@ -36,6 +38,7 @@ class ResponseForFormatListener
             $response = new Response($json, 200, [
                 'Content-Type' => 'application/activity+json',
             ]);
+            $this->activityPubDataCollector->setResponseJson($json);
             $event->setResponse($response);
         }
     }

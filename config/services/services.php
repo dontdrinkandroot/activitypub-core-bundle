@@ -122,6 +122,7 @@ return function (ContainerConfigurator $configurator): void {
     $services->set(ResponseForFormatListener::class)
         ->args([
             service(SerializerInterface::class),
+            service(ActivityPubDataCollector::class)
         ])
         ->tag(TagName::KERNEL_EVENT_LISTENER, ['event' => 'kernel.view', 'method' => 'onView']);
 

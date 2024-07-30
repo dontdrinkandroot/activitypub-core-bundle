@@ -68,4 +68,14 @@ class ActivityPubDataCollector extends AbstractDataCollector
             ];
         }
     }
+
+    public function setResponseJson(string $json): void
+    {
+        $this->data['response_json'] = $json;
+    }
+
+    public function getResponseJson(): ?string
+    {
+        return $this->data['response_json'] ?? null;
+    }
 }
